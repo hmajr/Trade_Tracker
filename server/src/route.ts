@@ -135,6 +135,35 @@ export async function appRoutes(app : FastifyInstance){
     return response.send(deletedTrade)
   })
 
+  //Get summary trades from a day
+  app.get('/summary', async () => {
+    // [ {date: 17/01, numTrades: 5, winTrades: 2}, {date: 18/01, num trades: 3, winTrades: 3} ]
+    const summary = await prisma.$queryRaw`
+      -- Win trades from a day
+      SELECT 
+        D.id, 
+        D.date,
+        (
+          SELECT 
+            cast( count(*) as float )
+          FROM day_trades DT
+          WHERE DT.day_id = D.id
+        ) as trades,
+        (
+          SELECT 
+            cast( count(*) as float )
+          FROM day_trades DT
+          JOIN trades T 
+            ON DT.trade_id = T.id
+          WHERE DT.day_id = D.id 
+            AND T.result > 0.0
+        ) as win_trades
+      FROM days D
+    `
+
+    return summary
+  })
+
   // HOME TEST
   app.get('/home', async ()=> {
     const trades = prisma.trade.findFirst()
