@@ -26,3 +26,11 @@ model Trade {
 
   @@map("trades")
 }
+
+model Day {
+  id   String   @id @default(uuid())
+  date DateTime
+
+  @@unique([date])
+  @@map("days")
+}
