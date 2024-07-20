@@ -86,6 +86,55 @@ export async function appRoutes(app : FastifyInstance){
     return updatedTrade
   })
 
+  //Delete a trade
+  app.delete('/trade/:id/delete', async (request, response) => {
+    
+    const deleteTradeParams = z.object({
+      id : z.string().uuid(),
+      date : z.coerce.date(),
+    })
+
+    const {id } = deleteTradeParams.parse(request.params)
+    const { date } = deleteTradeParams.parse(request.query)
+
+    const day = await prisma.day.findUnique({
+      where: {
+        date : new Date(date),
+      }
+    })
+
+    if( !day ){
+      return response.status(404).send('Day not found')
+    }
+
+    const dayTrade = await prisma.dayTrade.findUnique({
+      where: {
+        day_id_trade_id : {
+          day_id : day.id,
+          trade_id : id,
+        }
+      }
+    })
+
+    if( !dayTrade ){
+      return response.status(404).send('Trade not found in this day')
+    }
+
+    await prisma.dayTrade.delete({
+      where : {
+        id : dayTrade.id,
+      }
+    })
+
+    const deletedTrade = await prisma.trade.delete({
+      where : {
+        id : id,
+      }
+    })
+
+    return response.send(deletedTrade)
+  })
+
   // HOME TEST
   app.get('/home', async ()=> {
     const trades = prisma.trade.findFirst()
