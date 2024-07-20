@@ -65,6 +65,27 @@ export async function appRoutes(app : FastifyInstance){
     }
   })
 
+  //Update trade result (:id)
+  app.patch('/trades/:id/edit', async (request) => {
+    
+    const editTradeParams = z.object({
+      id: z.string().uuid(),
+    })
+    const editTradeQuery = z.object({
+      result : z.coerce.number(),
+    })
+    
+    const { id }  = editTradeParams.parse(request.params)
+    const { result } = editTradeQuery.parse(request.query)
+    
+    const updatedTrade = await prisma.trade.update({
+      where: { id: id },
+      data: { result: result },
+    });
+
+    return updatedTrade
+  })
+
   // HOME TEST
   app.get('/home', async ()=> {
     const trades = prisma.trade.findFirst()
