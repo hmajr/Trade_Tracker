@@ -1,0 +1,52 @@
+import '../styles/TradesDay.css'
+import * as Popover from '@radix-ui/react-popover';
+import { ProgressBar } from './ProgressBar';
+import clsx from 'clsx';
+
+interface TradeDayProps {
+  winner: number
+  ammount: number
+}
+
+export function TradesDay (props : TradeDayProps) { //Habit
+  
+  
+  const completedRatio = Math.round((props.winner/props.ammount) * 100 )
+
+  return (
+    <Popover.Root>
+      <Popover.Trigger className={clsx('w-10 h-10 border-2 rounded-lg', {
+        'bg-yellow-400 border-orange-300' : completedRatio == 100,
+        'bg-green-500 border-green-400' : completedRatio >= 80 && completedRatio < 100,
+        'bg-green-600 border-green-500' : completedRatio >= 60 && completedRatio < 80,
+        'bg-green-700 border-green-600' : completedRatio >= 40 && completedRatio < 60,
+        'bg-green-800 border-green-700' : completedRatio >= 20 && completedRatio < 40 ,
+        'bg-green-900 border-green-800' : completedRatio > 0 && completedRatio < 20,
+        'bg-zinc-900 border-zinc-800' : completedRatio == 0,
+      })}/>
+
+      <Popover.Portal>
+        <Popover.Content className='min-w-[320px] p-6 rounded-2xl bg-zinc-900 flex flex-col'>
+          <span className='font-semibold text-zinc-400'> 
+            terça-feira 
+          </span>
+          <span className='mt-1 font-extrabold leading-tight text-3xl'> 
+            16/07 
+          </span>
+
+          <ProgressBar progress={completedRatio}/>
+
+          <div className='mt-6 flex flex-col gap-3'>
+
+                  <span className='font-semibold text-xl text-white leading-tight'>
+                    WDO | R$ 549.00
+                  </span>
+
+          </div>
+
+          <Popover.Arrow height={8} width={16} className='fill-zinc-900' />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  )
+}
