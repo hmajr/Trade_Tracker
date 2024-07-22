@@ -41,7 +41,7 @@ export function Home(){
             datesFromYearStart.map(date => (
               <TradeDay
                 key={date.toISOString()}
-                onPress={() => navigate ('habit', { date: date.toISOString() })}
+                onPress={() => navigate ('trade', { date: date.toISOString() })}
               />
             ))
           }
