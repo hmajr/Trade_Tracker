@@ -1,4 +1,5 @@
 import { ScrollView, Text, View } from "react-native";
+import { useRoute } from "@react-navigation/native";
 import { BackButton } from "../components/BackButton";
 import dayjs from 'dayjs'
 import { ProgressBar } from "../components/progressbar";
@@ -8,6 +9,8 @@ interface Params {
 }
 
 export function Habit () {
+  const route = useRoute()
+  const { date } = route.params as Params
 
   const parsedDate = dayjs(date)
   const dayOfWeek = parsedDate.format('dddd')
