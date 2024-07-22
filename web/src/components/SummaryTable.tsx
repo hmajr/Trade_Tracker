@@ -1,5 +1,7 @@
+import { useEffect } from "react"
 import { generateDatesFromYearBeginning } from "../utils/generate-dates-from-year-beginning"
 import { TradesDay } from "./TradesDay"
+import { api } from '../lib/axios'
 const weekDays = [ 'D','S','T','Q','Q','S','S' ]
 
 const SummaryDates = generateDatesFromYearBeginning()
@@ -9,7 +11,12 @@ const ammountOfDaysToFill = minimumSummaryDatesSize - SummaryDates.length
 
 export function SummaryTable() {
   
-
+  useEffect(() => {
+    api.get('summary').then(response => {
+      console.log(response.data)
+    })
+  }, [])
+  
   return(
     <div className="w-full flex">
       {/* Days of Week */}
