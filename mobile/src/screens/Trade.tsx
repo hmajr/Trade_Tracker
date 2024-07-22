@@ -8,7 +8,7 @@ interface Params {
   date: string
 }
 
-export function Habit () {
+export function Trade () {
   const route = useRoute()
   const { date } = route.params as Params
 
