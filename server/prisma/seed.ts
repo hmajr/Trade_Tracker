@@ -3,17 +3,17 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 //numero de dados criados
-const numSeeds =  50
-console.log("Seed Nubmber: " + numSeeds)
+const NUM_SEEDS =  20
+console.log("Seed Nubmber: " + NUM_SEEDS)
 
 const tickers = ["WIN", "WDO"]
 //Range de data dos trades criados
-const startDate = new Date("2024-02-04T09:00:00.000z")
-const endDate = new Date("2024-07-14T23:00:00.000z")
+const START_DATE = new Date("2024-07-01T01:00:00.000z")
+const END_DATE = new Date("2024-07-23T23:59:00.000z")
 
 //Range resultado trade
-const minResult = -550
-const maxResult = 2090
+const MIN_RESULT = -550
+const MAX_RESULT = 2090
 
 //Generate seed
 async function run() {
@@ -23,17 +23,17 @@ async function run() {
   
   
   var count = 0
-  while (count < numSeeds ){
+  while (count < NUM_SEEDS ){
     
     //Generate random entry and exit Dates
-    var entryDate = random_dates( startDate, endDate )
+    var entryDate = random_dates( START_DATE, END_DATE )
     var exitDate = new Date(entryDate.getTime() + Math.floor(Math.random() * 4 + 1) * 60 * 60 * 1000)
 
     //Get ID generate for the Trade
     var tradeUID = await prisma.trade.create({
       data:{
         ticker: tickers[Math.floor( Math.random() * tickers.length )],
-        result: Math.floor( Math.random()* (maxResult - (minResult)) ) + (minResult),
+        result: Math.floor( Math.random()* (MAX_RESULT - (MIN_RESULT)) ) + (MIN_RESULT),
         entry_date: new Date(entryDate),
         exit_date: new Date(exitDate)
       }
