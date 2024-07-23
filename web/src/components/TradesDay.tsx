@@ -5,14 +5,15 @@ import clsx from 'clsx';
 import { TradeDetail } from './TradeDetail';
 
 interface TradeDayProps {
-  winner: number
-  ammount: number
+  date: Date
+  winner?: number
+  amount?: number
 }
 
-export function TradesDay (props : TradeDayProps) { //Habit
+export function TradesDay ({winner = 0, amount = 0} : TradeDayProps) { //Habit
   
   
-  const completedRatio = Math.round((props.winner/props.ammount) * 100 )
+  const completedRatio = amount > 0 ? Math.round(( winner / amount ) * 100 ) : 0
 
   return (
     <Popover.Root>
