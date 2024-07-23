@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { generateDatesFromYearBeginning } from "../utils/generate-dates-from-year-beginning"
 import { TradesDay } from "./TradesDay"
 import { api } from '../lib/axios'
+import dayjs from "dayjs"
 const weekDays = [ 'D','S','T','Q','Q','S','S' ]
 
 const summaryDates = generateDatesFromYearBeginning()
@@ -11,10 +12,9 @@ const ammountOfDaysToFill = minimumSummaryDatesSize - summaryDates.length
 
 type Summary = {
   id : string;
-  ticker : string;
-  result : number;
-  entryDate : string;
-  exitDate : string;
+  date : string;
+  trades : number;
+  winTrades : number;
 }[] //same as Array<{ ... }>
 
 export function SummaryTable() {
@@ -42,13 +42,18 @@ export function SummaryTable() {
       {/* Grid row of Days */}
       <div className="grid grid-rows-7 grid-flow-col gap-3">
         {summaryDates.map(date => {
+          const dayInSummary = summary.find(day => {
+            return dayjs(date).isSame(day.date, 'day')
+          })
+
           return (
-          <TradesDay 
-            ammount={6} 
-            winner={Math.round(Math.random()*6)} 
-            key={date.toString()} 
-          />
-        )
+            <TradesDay 
+              key={date.toString()}
+              date={date}
+              amount={dayInSummary?.trades} 
+              winner={dayInSummary?.winTrades} 
+            />
+          )
         })}
 
         {ammountOfDaysToFill > 0 && Array.from({ length: ammountOfDaysToFill}).map((_, i)=>{
