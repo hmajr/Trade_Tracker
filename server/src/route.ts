@@ -157,7 +157,7 @@ export async function appRoutes(app : FastifyInstance){
             ON DT.trade_id = T.id
           WHERE DT.day_id = D.id 
             AND T.result > 0.0
-        ) as win_trades
+        ) as winTrades
       FROM days D
     `
 
