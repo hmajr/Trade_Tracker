@@ -3,6 +3,7 @@ import * as Popover from '@radix-ui/react-popover';
 import { ProgressBar } from './ProgressBar';
 import clsx from 'clsx';
 import { TradeDetail } from './TradeDetail';
+import dayjs from 'dayjs';
 
 interface TradeDayProps {
   date: Date
@@ -10,7 +11,7 @@ interface TradeDayProps {
   amount?: number
 }
 
-export function TradesDay ({winner = 0, amount = 0} : TradeDayProps) { //Habit
+export function TradesDay ({date, winner = 0, amount = 0} : TradeDayProps) { //Habit
   
   
   const completedRatio = amount > 0 ? Math.round(( winner / amount ) * 100 ) : 0
@@ -33,7 +34,7 @@ export function TradesDay ({winner = 0, amount = 0} : TradeDayProps) { //Habit
             terça-feira 
           </span>
           <span className='mt-1 font-extrabold leading-tight text-3xl'> 
-            16/07 
+            {dayjs(date).format('DD/MM')} 
           </span>
 
           <ProgressBar progress={completedRatio}/>
