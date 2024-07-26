@@ -1,17 +1,59 @@
-import { View, Text , ScrollView } from "react-native";
+import { View, Text , ScrollView, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+
 import { Header } from "../components/Header";
+import { Loading } from "../components/Loading";
 import { TradeDay , DAY_SIZE} from "../components/TradeDay";
+
 import { generateDatesFromYearBeginning } from "../utils/generate-dates-from-year-beginning";
+import dayjs from "dayjs";
+
+import { api } from "../lib/axios";
 
 const weekDays = ['D','S','T','Q','Q','S','S'];
 const datesFromYearStart = generateDatesFromYearBeginning();
 const minimumSummaryDatesSizes = 18*6;
 const ammountOfDaysToFill = minimumSummaryDatesSizes - datesFromYearStart.length
 
+type SummaryProps = Array<{
+  id : string
+  date : string
+  trades : number
+  winTrades : number
+}>
+
 export function Home(){
+  const [loading, setLoading] = useState(true);
+  const [summary, setSummary] = useState<SummaryProps | null>(null)
 
   const { navigate } = useNavigation()
+
+  async function fetchData() {
+    try{
+      setLoading(true)
+      
+      const response = await api.get('/summary')
+      console.log(response.data)
+
+      setSummary(response.data)
+    } catch (error) {
+      Alert.alert('Ops!', 'Não carregou os dados')
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  if(loading){
+    return(
+      <Loading />
+    )
+  }
 
   return(
     <View className="flex-1 bg-background px-8 pt-16">
@@ -36,28 +78,42 @@ export function Home(){
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 100}}
       >
-        <View className="flex-row flex-wrap">
-          {
-            datesFromYearStart.map(date => (
-              <TradeDay
-                key={date.toISOString()}
-                onPress={() => navigate ('trade', { date: date.toISOString() })}
-              />
-            ))
-          }
-
-          {
-            ammountOfDaysToFill > 0 && Array
-              .from({ length: ammountOfDaysToFill})
-            .map((_, index) =>(
-              <View
-                key={index}
-                className="bg-zinc-900 rounded-lg border-2 m-1 border-zinc-800 opacity-40"
-                style={{ width: DAY_SIZE, height: DAY_SIZE }}
-              />
-            ))
-          }
-        </View > 
+        {
+          summary &&
+          (
+            <View className="flex-row flex-wrap">
+              {
+                datesFromYearStart.map(date => {
+                  const dayWithTrades = summary.find(day => {
+                    return dayjs(date).isSame(day.date, 'day')
+                  })
+                  
+                  return (
+                    <TradeDay
+                      key={date.toISOString()}
+                      date={date}
+                      amountOfTrades={dayWithTrades?.trades}
+                      amountOfWinnerTrades={dayWithTrades?.winTrades}
+                      onPress={() => navigate ('trade', { date: date.toISOString() })}
+                    />
+                  )
+                })
+              }
+    
+              {
+                ammountOfDaysToFill > 0 && Array
+                  .from({ length: ammountOfDaysToFill})
+                .map((_, index) =>(
+                  <View
+                    key={index}
+                    className="bg-zinc-900 rounded-lg border-2 m-1 border-zinc-800 opacity-40"
+                    style={{ width: DAY_SIZE, height: DAY_SIZE }}
+                  />
+                ))
+              }
+            </View >
+          )
+        } 
       </ScrollView>
     </View>
   )
