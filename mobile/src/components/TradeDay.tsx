@@ -24,7 +24,7 @@ export function TradeDay ({amountOfTrades = 0, amountOfWinnerTrades = 0, date, .
   return (
     <TouchableOpacity 
       className={clsx('rounded-lg border-2 m-1', {
-        'bg-yellow-400 border-orange-300' : winnerPercentage == 100,
+        'bg-yellow-400 border-yellow-500' : winnerPercentage == 100,
         'bg-green-500 border-green-400' : winnerPercentage >= 80 && winnerPercentage < 100,
         'bg-green-600 border-green-500' : winnerPercentage >= 60 && winnerPercentage < 80,
         'bg-green-700 border-green-600' : winnerPercentage >= 40 && winnerPercentage < 60,
