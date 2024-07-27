@@ -18,7 +18,9 @@ model Trade {
   //
   //BASIC TRADE INPUT INFO
 
-  id         String   @id @default(uuid())
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
   ticker     String
   entry_date DateTime
   exit_date  DateTime
