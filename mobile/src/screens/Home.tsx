@@ -10,6 +10,7 @@ import { generateDatesFromYearBeginning } from "../utils/generate-dates-from-yea
 import dayjs from "dayjs";
 
 import { api } from "../lib/axios";
+import { AxiosError } from "axios";
 
 const weekDays = ['D','S','T','Q','Q','S','S'];
 const datesFromYearStart = generateDatesFromYearBeginning();
@@ -33,13 +34,19 @@ export function Home(){
     try{
       setLoading(true)
       
-      const response = await api.get('/summary')
+      const response = await api.get('summary')
       console.log(response.data)
 
       setSummary(response.data)
     } catch (error) {
       Alert.alert('Ops!', 'Não carregou os dados')
-      console.error(error)
+      if( error instanceof AxiosError ){
+        console.error(error.response?.headers)
+        console.error(error.response?.data)
+        console.error(error.response?.status)
+      }else{
+        console.error(error)
+      }
     } finally {
       setLoading(false)
     }
