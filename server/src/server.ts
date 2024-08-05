@@ -8,7 +8,7 @@ app.register(cors)
 app.register(appRoutes)
 
 app.listen({
-  host: '192.168.3.80',
+  host: 'localhost',
   port: 3333,
 }).then((data) => {
   console.log("HTTP Server running: \n", data)
