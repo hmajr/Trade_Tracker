@@ -104,19 +104,27 @@ export async function appRoutes(app : FastifyInstance){
   app.patch('/trades/:id/edit', async (request) => {
     
     const editTradeParams = z.object({
-      id: z.string().uuid(),
+      id: z.string(),
     })
     const editTradeQuery = z.object({
-      result : z.coerce.number(),
+      newTicker : z.string(),
+      newResult : z.coerce.number(),
     })
     
     const { id }  = editTradeParams.parse(request.params)
-    const { result } = editTradeQuery.parse(request.query)
+    const { newTicker, newResult }  = editTradeQuery.parse(request.query)
     
     const updatedTrade = await prisma.trade.update({
       where: { id: id },
-      data: { result: result },
+      data: { 
+        ticker: newTicker,
+        result: newResult,
+       },
     });
+
+    if (!updatedTrade) {
+      throw new Error('Trade not found')
+    }
 
     return updatedTrade
   })
