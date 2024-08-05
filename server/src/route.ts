@@ -80,19 +80,17 @@ export async function appRoutes(app : FastifyInstance){
 
     const possibleTrades = await prisma.trade.findMany({
       where: {
-        entry_date: {
-          gt: startDate,
-        },
         exit_date: {
+          gte: startDate,
           lte: endDate,
         }
       }
     })
 
     //Filter/Get WIN Trades IDs
-    const winTrades = possibleTrades.filter(winTrade => winTrade.result > 0).map(trade =>{
+    const winTrades = possibleTrades?.filter(winTrade => winTrade.result > 0).map(trade =>{
       return trade.id
-    })
+    }) ?? []
 
     return {
       possibleTrades,
