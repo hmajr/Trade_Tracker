@@ -132,28 +132,23 @@ export async function appRoutes(app : FastifyInstance){
     
     const deleteTradeParams = z.object({
       id : z.string().uuid(),
-      date : z.coerce.date(),
     })
 
-    const {id } = deleteTradeParams.parse(request.params)
-    const { date } = deleteTradeParams.parse(request.query)
+    const { id } = deleteTradeParams.parse(request.params)
 
-    const day = await prisma.day.findUnique({
+    const trade = await prisma.trade.findUnique({
       where: {
-        date : new Date(date),
+        id : id
       }
     })
-
-    if( !day ){
-      return response.status(404).send('Day not found')
+    
+    if( !trade ){
+      return response.status(404).send("Day not found")
     }
 
-    const dayTrade = await prisma.dayTrade.findUnique({
+    const dayTrade = await prisma.dayTrade.findFirst({
       where: {
-        day_id_trade_id : {
-          day_id : day.id,
-          trade_id : id,
-        }
+        trade_id : id,
       }
     })
 
@@ -161,19 +156,24 @@ export async function appRoutes(app : FastifyInstance){
       return response.status(404).send('Trade not found in this day')
     }
 
-    await prisma.dayTrade.delete({
-      where : {
-        id : dayTrade.id,
-      }
-    })
+    try {
+      await prisma.dayTrade.delete({
+          where: {
+              id: dayTrade.id,
+          },
+      });
 
-    const deletedTrade = await prisma.trade.delete({
-      where : {
-        id : id,
-      }
-    })
+      const deletedTrade = await prisma.trade.delete({
+          where: {
+              id: id,
+          },
+      });
 
-    return response.send(deletedTrade)
+      return response.send(deletedTrade);
+    } catch (error) {
+        console.error('Error deleting trade:', error); // Log the error for debugging
+        return response.status(500).send({error: 'Error deleting trade'});
+    }
   })
 
   //Get summary trades from a day
