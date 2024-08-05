@@ -16,7 +16,7 @@ export async function appRoutes(app : FastifyInstance){
     try {
       const { ticker, result , entry_date, exit_date } = createTradeBody.parse(request.body)
     
-      await prisma.trade.create({
+      var tradeUID = await prisma.trade.create({
         data: {
           ticker,
           entry_date,
