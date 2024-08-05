@@ -16,7 +16,7 @@ export function New() {
   
   async function handleCreateNewTrade() {
     try {
-      if( (ticker.length == 0) ||
+      if( !(ticker.trim()) ||
           !dayjs(exit_date).isValid() || 
           !dayjs(entry_date).isValid() ||
           !dayjs(entry_date).isBefore(exit_date)
