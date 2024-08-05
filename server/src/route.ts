@@ -25,6 +25,41 @@ export async function appRoutes(app : FastifyInstance){
         }
       })
 
+      const exitDateWithoutTime = dayjs(exit_date).set('hour', 0).set('minute', 0).set('second', 0).toDate()
+      //search for unique date for a trade
+      const existingDay = await prisma.day.findUnique({
+        where: {
+          date: exitDateWithoutTime,
+        },
+      });
+    
+      if(!existingDay){
+        await prisma.day.create({
+          data: {
+            date: exitDateWithoutTime,
+            dayTrades: {
+              create: {
+                trade_id : tradeUID.id,
+              }
+            }
+          }
+        })
+      }
+      else{
+        await prisma.day.update({
+          where: {
+            date: exitDateWithoutTime,
+          },
+          data: {
+            dayTrades: {
+              create: {
+                trade_id: tradeUID.id,
+              },
+            },
+          },
+        });
+      }
+      // FALTA REALIZAR O LINK TABLE DAY -> CREATED_TRADE
       reply.code(201).send({ message: 'Trade created successfully' })
     } catch (error) {
       console.error(error)
