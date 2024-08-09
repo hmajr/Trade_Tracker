@@ -1,7 +1,6 @@
-import { Check, Prohibit} from "phosphor-react";
-import { FormEvent, useEffect, useState } from "react";
+import { Check } from "phosphor-react";
+import { FormEvent, useState } from "react";
 import { api } from "../lib/axios";
-import clsx from "clsx";
 import dayjs from "dayjs";
 
 interface editTradeProps{
@@ -15,7 +14,6 @@ interface editTradeProps{
 export function EditTradeForm(props : editTradeProps){
   const [ticker, setTicker] = useState(props.ticker)
   const [result, setResult] = useState(props.result)
-  const [isValid = false, setIsValid] = useState(Boolean)
 
   async function handleEditTrade(event : FormEvent){
     event.preventDefault()
@@ -38,13 +36,6 @@ export function EditTradeForm(props : editTradeProps){
   }
 
   //set isValid true if input is inserted
-  useEffect(() => {
-    (ticker && (result || result == 0) )
-      ?
-        setIsValid(true)
-        :
-        setIsValid(false)
-  }, [ticker, result])
   
   return (
     <form onSubmit={handleEditTrade} className="w-full flex flex-col mt-6">
@@ -100,20 +91,9 @@ export function EditTradeForm(props : editTradeProps){
       
       <button 
         type="submit" 
-        className={ clsx('mt-6 rounded-lg p-4 gap-3 flex items-center justify-center font-semibold transition-colors',
-          {
-            'bg-green-600 hover:bg-green-400' : isValid,
-            'bg-zinc-600 hover:bg-zinc-500 pointer-events-none' : !isValid
-          }
-        )}
+        className='mt-6 rounded-lg p-4 gap-3 flex items-center justify-center font-semibold transition-colors bg-green-600 hover:bg-green-400'
       >
-        {
-          isValid ?  
             <Check size={20} weight="bold" />  
-            :
-            <Prohibit size={20} weight="bold" />
-        }
-        
         Confirmar
       </button>
     </form>
