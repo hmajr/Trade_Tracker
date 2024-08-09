@@ -95,7 +95,7 @@ export function TradeDetail (props : TradeProps) { //Habit
           Excluir Trade
         </Dialog.Trigger >
 
-        { showDeleteModal && 
+        { showDeleteModal || 
           (
             <Dialog.Portal>
               <Dialog.Overlay className='w-screen h-screen bg-black/80 fixed inset-0'/>
