@@ -22,11 +22,17 @@ export function NewTradeForm(){
       return (console.log("TRADE INVALIDO!!!"))
     }
 
+
     await api.post('trades', {
       ticker,
       result,
       entry_date,
       exit_date
+    }).then((response) => {
+      console.log('Trade created successfully:', response.data);
+    })
+    .catch((error) => {
+      console.error('Error creating trade:', error);
     })
 
     alert('Trade criado !!!')
