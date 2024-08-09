@@ -66,8 +66,8 @@ export function EditTradeForm(props : editTradeProps){
         />
 
       
-      <label htmlFor="" className="font-semibold flex leading-tight mt-4">
-        Data/Hora Entrada
+      <label className="font-semibold flex leading-tight mt-4">
+        Data/Hora Entrada <span className="font-normal">&nbsp;(somente leitura)</span>
       </label>
 
       <input readOnly
@@ -78,8 +78,8 @@ export function EditTradeForm(props : editTradeProps){
       />
 
       
-      <label htmlFor="" className="font-semibold flex leading-tight mt-4">
-        Data/Hora Saída
+      <label className="font-semibold flex leading-tight mt-4">
+        Data/Hora Saída <span className="font-normal">&nbsp;(somente leitura)</span>
       </label>
 
       <input readOnly
