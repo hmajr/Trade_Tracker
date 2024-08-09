@@ -9,6 +9,7 @@ interface editTradeProps{
   result : number,
   entryDate : string,
   exitDate : string 
+  onTradeEdited: () => void
 }
 
 export function EditTradeForm(props : editTradeProps){
@@ -30,14 +31,14 @@ export function EditTradeForm(props : editTradeProps){
     }).then((response) => {
         console.log('Trade updated successfully:', response.data);
         alert('Trade editado!')
+        
+        props.onTradeEdited()
       })
       .catch((error) => {
         console.error('Error updating trade:', error);
       })
   }
 
-  //set isValid true if input is inserted
-  
   return (
     <form onSubmit={handleEditTrade} className="w-full flex flex-col mt-6">
       <label htmlFor="ticker">
@@ -93,6 +94,7 @@ export function EditTradeForm(props : editTradeProps){
       <button 
         type="submit" 
         className='mt-6 rounded-lg p-4 gap-3 flex items-center justify-center font-semibold transition-colors bg-green-600 hover:bg-green-400'
+        onClick={handleEditTrade}
       >
         <Check size={20} weight="bold" />  
         Confirmar
