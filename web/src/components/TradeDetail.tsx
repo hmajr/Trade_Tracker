@@ -17,9 +17,13 @@ interface TradeProps {
 
 export function TradeDetail (props : TradeProps) { //Habit
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   
   const handleTradeDeleted = () => {
-    setShowDeleteModal(false); // Close the modal/container
+    setShowDeleteModal(!showDeleteModal); // Close the modal/container
+  };
+  const handleTradeEdited = () => {
+    setShowEditModal(!showEditModal); // Close the modal/container
   };
 
   return (
@@ -49,11 +53,14 @@ export function TradeDetail (props : TradeProps) { //Habit
           type='button' 
           className='border border-green-700 font-semibold rounded-lg px-6 py-4 flex items-center gap-3 hover:border-green-200  transition-colors duration-150'
         >
-          <PencilSimple size={20} className='text-green-500' />
+          <PencilSimple size={20} className=' text-green-500' />
 
           Editar Trade
         </Dialog.Trigger >
 
+        {
+          showEditModal ||
+          (
         <Dialog.Portal>
           <Dialog.Overlay className='w-screen h-screen bg-black/80 fixed inset-0'/>
           <Dialog.Content className='absolute p-10 bg bg-zinc-900 rounded-2xl w-full max-w-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
@@ -63,9 +70,18 @@ export function TradeDetail (props : TradeProps) { //Habit
             <Dialog.Close className='absolute right-6 top-6 text-zinc-400 hover:text-zinc-200'>
               <X size={24} aria-label='Fechar'/>
             </Dialog.Close>
-            <EditTradeForm id={props.id} ticker={props.ticker} result={props.result} entryDate={props.entry} exitDate={props.exit}/>
+                <EditTradeForm 
+                  id = {props.id}
+                  ticker = {props.ticker}
+                  result = {props.result}
+                  entryDate = {props.entry}
+                  exitDate = {props.exit}
+                  onTradeEdited = {handleTradeEdited}
+                />
           </Dialog.Content>
         </Dialog.Portal>
+          )
+        }
       </Dialog.Root>
 
       <Dialog.Root>
