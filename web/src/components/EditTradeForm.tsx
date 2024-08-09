@@ -17,18 +17,19 @@ export function EditTradeForm(props : editTradeProps){
 
   async function handleEditTrade(event : FormEvent){
     event.preventDefault()
-
-    if( !ticker )
+    
+    if( !ticker.trim() )
     {
       return (console.log("TRADE INVALIDO!!!"))
     }
-
-    await api.patch(`trades/${props.id}/edit`, {
+    
+    console.log(`${ticker} and ${result}`)
+    await api.patch(`trade/${props.id}/edit`, {
       ticker,
-      result,
-    })
-      .then((response) => {
+      result
+    }).then((response) => {
         console.log('Trade updated successfully:', response.data);
+        alert('Trade editado!')
       })
       .catch((error) => {
         console.error('Error updating trade:', error);
@@ -93,7 +94,7 @@ export function EditTradeForm(props : editTradeProps){
         type="submit" 
         className='mt-6 rounded-lg p-4 gap-3 flex items-center justify-center font-semibold transition-colors bg-green-600 hover:bg-green-400'
       >
-            <Check size={20} weight="bold" />  
+        <Check size={20} weight="bold" />  
         Confirmar
       </button>
     </form>
