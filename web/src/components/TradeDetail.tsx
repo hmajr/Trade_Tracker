@@ -39,19 +39,20 @@ export function TradeDetail (props : TradeProps) { //Habit
       })}> 
         {`R$ ${props.result},00`}
       </span>
-      <div className='text-white font-semibold'>
+      <div className='mt-2 text-white font-semibold'>
         Entrada
       </div>
-      <span> {dayjs(props.entry).toString()} </span>
-      <div className='text-white font-semibold'>
+      <span className='text-lg'> {dayjs(props.entry).format('ddd, DD MMM YYYY HH:mm:ss')} </span>
+
+      <div className='mt-2 text-white font-semibold'>
         Saída
       </div>
-      <span> {dayjs(props.exit).toString()} </span>
+      <span className='text-lg'> {dayjs(props.exit).format('ddd, DD-MM-YYYY HH:mm:ss')} </span>
 
       <Dialog.Root>
         <Dialog.Trigger 
           type='button' 
-          className='border border-green-700 font-semibold rounded-lg px-6 py-4 flex items-center gap-3 hover:border-green-200  transition-colors duration-150'
+          className='mt-2 text-lg border border-green-700 font-semibold rounded-lg px-6 py-4 flex items-center gap-3 hover:border-green-200  transition-colors duration-150'
         >
           <PencilSimple size={20} className=' text-green-500' />
 
