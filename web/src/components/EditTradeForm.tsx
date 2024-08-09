@@ -4,7 +4,7 @@ import { api } from "../lib/axios";
 import clsx from "clsx";
 import dayjs from "dayjs";
 
-interface editTradesProps{
+interface editTradeProps{
   id : string,
   ticker : string,
   result : number,
@@ -12,12 +12,12 @@ interface editTradesProps{
   exitDate : string 
 }
 
-export function EditTradeForm(props : editTradesProps){
+export function EditTradeForm(props : editTradeProps){
   const [ticker, setTicker] = useState(props.ticker)
   const [result, setResult] = useState(props.result)
   const [isValid = false, setIsValid] = useState(Boolean)
 
-  async function editTrade( event : FormEvent){
+  async function handleEditTrade(event : FormEvent){
     event.preventDefault()
 
     if( !ticker )
@@ -47,7 +47,7 @@ export function EditTradeForm(props : editTradesProps){
   }, [ticker, result])
   
   return (
-    <form onSubmit={editTrade} className="w-full flex flex-col mt-6">
+    <form onSubmit={handleEditTrade} className="w-full flex flex-col mt-6">
       <label htmlFor="ticker">
         Qual o ticker?
       </label>
