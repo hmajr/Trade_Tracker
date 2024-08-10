@@ -6,7 +6,7 @@ import dayjs from "dayjs"
 
 const weekDays = [ 'D','S','T','Q','Q','S','S' ]
 const summaryDates = generateDatesFromYearBeginning()
-const minimumSummaryDatesSize = 18*7
+const minimumSummaryDatesSize = 17*7
 const ammountOfDaysToFill = minimumSummaryDatesSize - summaryDates.length
 const weekDaysBeforeSummaryDateBeginning = dayjs(summaryDates[0]).day() % 7
 
@@ -21,8 +21,8 @@ export function SummaryTable() {
   const [summary, setSummary] = useState<Summary>([])
   const gridRef = useRef<HTMLDivElement>(null)
   
+  //Get summary table
   useEffect(() => {
-    
     api.get('summary').then(response => {
       setSummary(response.data)
     }).catch(error => {
@@ -30,11 +30,19 @@ export function SummaryTable() {
     })
   }, [])
   
+  // Scroll to finish 
   useEffect(() => {
     if (gridRef.current) {
       gridRef.current.scrollLeft = gridRef.current.scrollWidth;
     }
   }, [summary])
+
+  const isScrollbarNeeded = () => {
+    if (gridRef.current) {
+      return gridRef.current.scrollWidth > gridRef.current.clientWidth;
+    }
+    return false; 
+  }
 
   return(
     <div className="w-full flex">
@@ -52,8 +60,7 @@ export function SummaryTable() {
       {/* Grid row of Days */}
       <div 
         ref={gridRef}
-        className="grid grid-rows-7 grid-flow-col gap-3 overflow-x-scroll
-                   scrollbar scrollbar-track-rounded-full scrollbar-thumb-zinc-200 scrollbar-track-transparent"
+        className={`grid grid-rows-7 grid-flow-col gap-3 ${isScrollbarNeeded()? 'overflow-x-scroll':'overflow-x-hidden'} scrollbar scrollbar-track-rounded-full scrollbar-thumb-zinc-200 scrollbar-track-transparent`}
         style={{ width: gridRef.current ? gridRef.current.offsetWidth : 'auto' }}
       >
         {weekDaysBeforeSummaryDateBeginning > 0 && Array.from({length : weekDaysBeforeSummaryDateBeginning}).map((_ , i)=>{
