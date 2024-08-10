@@ -37,7 +37,7 @@ export function TradesList( {date}: TradesListProps) {
           <Popover.Root key={`${trade.id}-pop`}>
             <Popover.Trigger>
                 <span className='font-semibold text-xl text-white leading-tight'>
-                  {trade.ticker} | R$ {trade.result}
+                  {trade.ticker} | {trade.result >= 0 ? `R$ ${trade.result}` : `-R$ ${trade.result*(-1)}`}
                 </span>
             </Popover.Trigger>
             <Popover.Content className='min-w-[320px] p-6 rounded-2xl bg-zinc-900 border-2 border-zinc-500 flex flex-col'>

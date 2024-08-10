@@ -37,7 +37,7 @@ export function TradeDetail (props : TradeProps) { //Habit
         'text-zinc-300' : props.result > -10 && props.result < 10,
         'text-green-500' : props.result >= 10 
       })}> 
-        {`R$ ${props.result},00`}
+        {props.result >= 0 ? `R$ ${props.result},00` : `-R$ ${props.result*(-1)},00`}
       </span>
       <div className='mt-2 text-white font-semibold'>
         Entrada
@@ -62,15 +62,15 @@ export function TradeDetail (props : TradeProps) { //Habit
         {
           showEditModal ||
           (
-        <Dialog.Portal>
-          <Dialog.Overlay className='w-screen h-screen bg-black/80 fixed inset-0'/>
-          <Dialog.Content className='absolute p-10 bg bg-zinc-900 rounded-2xl w-full max-w-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-            <Dialog.Title className='text-3xl leading-tight font-extrabold'>
-              Editar Trade
-            </Dialog.Title>
-            <Dialog.Close className='absolute right-6 top-6 text-zinc-400 hover:text-zinc-200'>
-              <X size={24} aria-label='Fechar'/>
-            </Dialog.Close>
+            <Dialog.Portal>
+              <Dialog.Overlay className='w-screen h-screen bg-black/80 fixed inset-0'/>
+              <Dialog.Content className='absolute p-10 bg bg-zinc-900 rounded-2xl w-full max-w-md top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                <Dialog.Title className='text-3xl leading-tight font-extrabold'>
+                  Editar Trade
+                </Dialog.Title>
+                <Dialog.Close className='absolute right-6 top-6 text-zinc-400 hover:text-zinc-200'>
+                  <X size={24} aria-label='Fechar'/>
+                </Dialog.Close>
                 <EditTradeForm 
                   id = {props.id}
                   ticker = {props.ticker}
@@ -79,8 +79,8 @@ export function TradeDetail (props : TradeProps) { //Habit
                   exitDate = {props.exit}
                   onTradeEdited = {handleTradeEdited}
                 />
-          </Dialog.Content>
-        </Dialog.Portal>
+              </Dialog.Content>
+            </Dialog.Portal>
           )
         }
       </Dialog.Root>
@@ -88,7 +88,7 @@ export function TradeDetail (props : TradeProps) { //Habit
       <Dialog.Root>
         <Dialog.Trigger 
           type='button' 
-          className='border border-red-700 font-semibold rounded-lg px-6 py-4 flex items-center gap-3 hover:border-red-200  transition-colors duration-150'
+          className=' font-semibold text-lg border border-red-700 rounded-lg px-6 py-4 flex items-center gap-3 hover:border-red-200  transition-colors duration-150'
         >
           <Trash size={20} className='text-red-500' />
 
