@@ -21,9 +21,11 @@ export function SummaryTable() {
   const [summary, setSummary] = useState<Summary>([])
 
   useEffect(() => {
-    console.log(weekDaysBeforeSummaryDateBeginning)
+    
     api.get('summary').then(response => {
       setSummary(response.data)
+    }).catch(error => {
+      console.error("Error getting summary trade table", error)
     })
   }, [])
   
