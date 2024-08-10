@@ -2,6 +2,7 @@ import { Check } from "phosphor-react";
 import { FormEvent, useState } from "react";
 import { api } from "../lib/axios";
 import dayjs from "dayjs";
+import { FORMAT_STYLE } from "../lib/dayjs";
 
 interface editTradeProps{
   id : string,
@@ -75,7 +76,7 @@ export function EditTradeForm(props : editTradeProps){
       <input readOnly
         type="text"
         id="entry"
-        value={dayjs(props.entryDate).toString()}
+        value={dayjs(props.entryDate).format(FORMAT_STYLE)}
         className="p-4 block rounded-lg mt-3 bg-zinc-800 text-white placeholder:text-zinc-400"
       />
 
@@ -87,7 +88,7 @@ export function EditTradeForm(props : editTradeProps){
       <input readOnly
         type="text"
         id="exit"
-        value={dayjs(props.exitDate).toString()}
+        value={dayjs(props.exitDate).format(FORMAT_STYLE)}
         className="p-4 block rounded-lg mt-3 bg-zinc-800 text-white placeholder:text-zinc-400"
       />
       

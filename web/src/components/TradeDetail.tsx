@@ -6,6 +6,7 @@ import { PencilSimple, Trash, X } from 'phosphor-react';
 import { EditTradeForm } from './EditTradeForm';
 import { DeleteTradeForm } from './DeleteTradeForm';
 import { useState } from 'react';
+import { FORMAT_STYLE } from '../lib/dayjs';
 
 interface TradeProps {
   id: string,
@@ -42,12 +43,12 @@ export function TradeDetail (props : TradeProps) { //Habit
       <div className='mt-2 text-white font-semibold'>
         Entrada
       </div>
-      <span className='text-lg'> {dayjs(props.entry).format('ddd, DD MMM YYYY HH:mm:ss')} </span>
+      <span className='text-lg'> {dayjs(props.entry).format(FORMAT_STYLE)} </span>
 
       <div className='mt-2 text-white font-semibold'>
         Saída
       </div>
-      <span className='text-lg'> {dayjs(props.exit).format('ddd, DD-MM-YYYY HH:mm:ss')} </span>
+      <span className='text-lg'> {dayjs(props.exit).format(FORMAT_STYLE)} </span>
 
       <Dialog.Root>
         <Dialog.Trigger 
