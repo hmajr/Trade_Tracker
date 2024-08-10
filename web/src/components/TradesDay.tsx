@@ -2,8 +2,8 @@ import '../styles/TradesDay.css'
 import * as Popover from '@radix-ui/react-popover';
 import { ProgressBar } from './ProgressBar';
 import clsx from 'clsx';
-import { TradeDetail } from './TradeDetail';
 import dayjs from 'dayjs';
+import { TradesList } from './TradesList';
 
 interface TradeDayProps {
   date: Date
