@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { generateDatesFromYearBeginning } from "../utils/generate-dates-from-year-beginning"
 import { TradesDay } from "./TradesDay"
 import { api } from '../lib/axios'
@@ -19,7 +19,8 @@ type Summary = {
 
 export function SummaryTable() {
   const [summary, setSummary] = useState<Summary>([])
-
+  const gridRef = useRef<HTMLDivElement>(null)
+  
   useEffect(() => {
     
     api.get('summary').then(response => {
@@ -29,6 +30,12 @@ export function SummaryTable() {
     })
   }, [])
   
+  useEffect(() => {
+    if (gridRef.current) {
+      gridRef.current.scrollLeft = gridRef.current.scrollWidth;
+    }
+  }, [summary])
+
   return(
     <div className="w-full flex">
       {/* Days of Week */}
@@ -43,7 +50,12 @@ export function SummaryTable() {
       </div>
       
       {/* Grid row of Days */}
-      <div className="grid grid-rows-7 grid-flow-col gap-3">
+      <div 
+        ref={gridRef}
+        className="grid grid-rows-7 grid-flow-col gap-3 overflow-x-scroll
+                   scrollbar scrollbar-track-rounded-full scrollbar-thumb-zinc-200 scrollbar-track-transparent"
+        style={{ width: gridRef.current ? gridRef.current.offsetWidth : 'auto' }}
+      >
         {weekDaysBeforeSummaryDateBeginning > 0 && Array.from({length : weekDaysBeforeSummaryDateBeginning}).map((_ , i)=>{
           return (
             <div 
