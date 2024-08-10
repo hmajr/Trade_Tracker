@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br'
-import timezone from 'dayjs/plugin/timezone'
-import utc from 'dayjs/plugin/utc'
+import LocalizedFormat from 'dayjs/plugin/localizedFormat'
 
-dayjs.extend(timezone)
-dayjs.extend(utc)
+dayjs.extend(LocalizedFormat)
+
+export const FORMAT_STYLE = 'ddd, DD MMM YYYY HH:mm:ss'
 dayjs.locale('pt-br')
