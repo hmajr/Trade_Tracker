@@ -11,8 +11,8 @@ interface TradeProps {
   id: string,
   ticker: string,
   result: number,
-  entry: string,
-  exit: string
+  entry: Date,
+  exit: Date
 }
 
 export function TradeDetail (props : TradeProps) { //Habit

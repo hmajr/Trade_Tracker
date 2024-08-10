@@ -7,8 +7,8 @@ interface editTradeProps{
   id : string,
   ticker : string,
   result : number,
-  entryDate : string,
-  exitDate : string 
+  entryDate : Date,
+  exitDate : Date 
   onTradeEdited: () => void
 }
 
