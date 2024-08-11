@@ -16,6 +16,7 @@ const weekDays = ['D','S','T','Q','Q','S','S'];
 const datesFromYearStart = generateDatesFromYearBeginning();
 const minimumSummaryDatesSizes = 18*6;
 const ammountOfDaysToFill = minimumSummaryDatesSizes - datesFromYearStart.length
+const weekDaysBeforeSummaryDateBeginning = dayjs(datesFromYearStart[0]).day() % 7
 
 type SummaryProps = Array<{
   id : string
@@ -35,7 +36,7 @@ export function Home(){
       setLoading(true)
       
       const response = await api.get('summary')
-      console.log(response.data)
+      // console.log(response.data)
 
       setSummary(response.data)
     } catch (error) {
@@ -67,6 +68,7 @@ export function Home(){
       
       <Header />
       
+      {/* Days of Week */}
       <View className="flex-row mt-6 mb-2 justify-between">
         {
           weekDays.map((weekDay, i) =>(
@@ -80,16 +82,29 @@ export function Home(){
           ))
         }
       </View>
-
+        
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 100}}
       >
+        {/* Grid of Days */}
+       
         {
           summary &&
           (
             <View className="flex-row flex-wrap">
-              {
+               {/* Days before start */
+                weekDaysBeforeSummaryDateBeginning > 0 && Array.from({length : weekDaysBeforeSummaryDateBeginning}).map((_ , i)=>{
+                  return (
+                    <View
+                      key={i}
+                      className="bg-zinc-900 rounded-lg border-2 m-1 border-zinc-800 opacity-40"
+                      style={{ width: DAY_SIZE, height: DAY_SIZE }}
+                  />
+                  )
+                })
+              }
+              {/* Trade Days */
                 datesFromYearStart.map(date => {
                   const dayWithTrades = summary.find(day => {
                     return dayjs(date).isSame(day.date, 'day')
@@ -106,8 +121,7 @@ export function Home(){
                   )
                 })
               }
-    
-              {
+              {/* Empty filler empty trade days */
                 ammountOfDaysToFill > 0 && Array
                   .from({ length: ammountOfDaysToFill})
                 .map((_, index) =>(
