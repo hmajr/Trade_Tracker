@@ -103,7 +103,7 @@ export function NewTradeForm(){
         onChange={event => setExitDate(new Date(event.target.value))}
       />
       
-      <button type="submit" className={ clsx('mt-6 rounded-lg p-4 gap-3 flex items-center justify-center font-semibold',
+      <button type="submit" className={ clsx('mt-6 rounded-lg p-4 gap-3 flex items-center justify-center font-semibold transition-colors',
           {
             'bg-green-600 hover:bg-green-400' : isValid,
             'bg-zinc-600 hover:bg-zinc-500 pointer-events-none' : !isValid

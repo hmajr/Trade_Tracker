@@ -14,7 +14,7 @@ export function Header(){
       <Dialog.Root>
         <Dialog.Trigger 
           type='button' 
-          className='border border-green-500 font-semibold rounded-lg px-6 py-4 flex items-center gap-3 hover:border-green-200'
+          className='border border-green-500 font-semibold rounded-lg px-6 py-4 flex items-center gap-3 hover:border-green-200  transition-colors duration-150'
         >
           <Plus size={20} className='text-green-400' />
           Novo Trade

@@ -22,7 +22,7 @@ export function TradesDay ({date, winner = 0, amount = 0} : TradeDayProps) { //H
 
   return (
     <Popover.Root>
-      <Popover.Trigger className={clsx('w-10 h-10 border-2 rounded-lg', {
+      <Popover.Trigger className={clsx('w-10 h-10 border-2 rounded-lg transition-colors', {
         'bg-yellow-400 border-orange-300' : completedRatio == 100,
         'bg-green-500 border-green-400' : completedRatio >= 80 && completedRatio < 100,
         'bg-green-600 border-green-500' : completedRatio >= 60 && completedRatio < 80,
@@ -42,7 +42,7 @@ export function TradesDay ({date, winner = 0, amount = 0} : TradeDayProps) { //H
           </span>
 
           <Popover.Arrow height={8} width={16} className='fill-zinc-900' />
-
+          
           <ProgressBar progress={completedRatio}/>
 
           <TradesList date={date}/>
