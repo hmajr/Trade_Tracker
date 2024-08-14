@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react"
+import dayjs from "dayjs"
+import { api } from '../lib/axios'
 import { generateDatesFromYearBeginning } from "../utils/generate-dates-from-year-beginning"
 import { TradesDay } from "./TradesDay"
-import { api } from '../lib/axios'
-import dayjs from "dayjs"
 
 const weekDays = [ 'D','S','T','Q','Q','S','S' ]
 const summaryDates = generateDatesFromYearBeginning()
@@ -47,7 +47,7 @@ export function SummaryTable() {
   return(
     <div className="w-full flex">
       {/* Days of Week */}
-      <div className="grid grid-rows-7  grid-flow-row gap-3">
+      <div className="grid grid-rows-7 gap-3 grid-flow-row">
         {weekDays.map((weekDay, i)=>{
           return (
             <div key={`${weekDay}-${i}`} className="text-zinc-400 text-xl h-10 w-10 font-bold flex items-center justify-center">
@@ -60,7 +60,7 @@ export function SummaryTable() {
       {/* Grid row of Days */}
       <div 
         ref={gridRef}
-        className={`grid grid-rows-7 grid-flow-col gap-3 ${isScrollbarNeeded()? 'overflow-x-scroll':'overflow-x-hidden'} scrollbar scrollbar-track-rounded-full scrollbar-thumb-zinc-200 scrollbar-track-transparent`}
+        className={`grid grid-rows-7 gap-3 grid-flow-col ${isScrollbarNeeded()? 'overflow-x-scroll':'overflow-x-hidden'} scrollbar scrollbar-track-rounded-full scrollbar-thumb-zinc-200 scrollbar-track-transparent`}
         style={{ width: gridRef.current ? gridRef.current.offsetWidth : 'auto' }}
       >
         {weekDaysBeforeSummaryDateBeginning > 0 && Array.from({length : weekDaysBeforeSummaryDateBeginning}).map((_ , i)=>{
@@ -84,8 +84,8 @@ export function SummaryTable() {
             <TradesDay 
               key={date.toString()}
               date={date}
-              amount={dayInSummary?.trades} 
-              winner={dayInSummary?.winTrades} 
+              defaultAmount={dayInSummary?.trades} 
+              defaultWinner={dayInSummary?.winTrades} 
             />
           )
         })}
