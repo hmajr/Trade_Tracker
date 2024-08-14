@@ -9,13 +9,13 @@ import { CompletedRatioCalculation } from '../utils/completed-ratio-calculation'
 
 interface TradeDayProps {
   date: Date
-  winner?: number
-  amount?: number
+  defaultWinner?: number
+  defaultAmount?: number
 }
 
-export function TradesDay ({date, winner = 0, amount = 0} : TradeDayProps) { //Habit
+export function TradesDay ({date, defaultWinner = 0, defaultAmount = 0} : TradeDayProps) { //Habit
   
-  const completedRatio = amount > 0 ? Math.round(( winner / amount ) * 100 ) : 0
+  const completedRatio = CompletedRatioCalculation( defaultAmount, defaultWinner)
 
   const dayAndMonth = dayjs(date).format('DD/MM')
   const dayOfWeek = dayjs(date).format('dddd')
