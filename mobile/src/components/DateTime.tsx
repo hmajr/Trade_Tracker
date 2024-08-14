@@ -1,53 +1,62 @@
 import { Text, TouchableOpacity, View } from "react-native";
-import DateTimePicker, { DateTimePickerEvent }  from '@react-native-community/datetimepicker'
 import { useState } from "react";
+import { DateTimePickerAndroid, DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import dayjs from "dayjs";
 
-interface Props{
-  title?: string,
-  type : string,
+interface DateTimeProps {
+  onDateTimeChange: (newDateTime: Date) => void;
 }
 
-export function DateTime( { title, type } : Props){
-  if( type != 'date' && type != 'time'){
-    throw new Error('Invalid prop value. Expected "date" or "time".')
-  }
+export function DateTime({ onDateTimeChange }: DateTimeProps) {
+  const [dateTime, setDateTime] = useState(new Date());
 
-  const [ isInputVisible, setInputVisible ] = useState( false )
-  const [ date, setDate ] = useState(new Date())
+  const onChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (selectedDate) {
+      setDateTime(selectedDate); 
+      onDateTimeChange(selectedDate); 
+    } 
+  };
 
-  const onChange = (event, value) => {
-    setDate(value);
+  const showMode = (currentMode: string): void => {
+    DateTimePickerAndroid.open({
+      mode: currentMode,
+      value: dateTime,
+      onChange,
+      is24Hour: true,
+    });
+  };
+
+  const showDatePicker = () => {
+    showMode('datetime');
+  };
+
+  const showTimePicker = () => {
+    showMode('time');
   };
 
   return (
-    <View>
-      <Text className="mt-6 text-white font-semibold text-base">
-        {title}
-      </Text>
- 
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={() => setInputVisible(!isInputVisible)}
-      >
-        {/* <TextInput
-          className="h-12 pl-4 rounded-lg mt-3 bg-zinc-800 text-white focus:border-2 focus:border-green-600"
-        /> */}
-        { isInputVisible && 
-          <DateTimePicker 
-            mode={type}
-            maximumDate={new Date()}
-            value={date}
-            onChange={onChange}
-          />
-          
-        }
-        <Text 
-          className="h-10 m-2 p-1 align-middle items-center border bg-zinc-800 rounded-lg text-base text-white"
+    <View className="w-full">
+      <View className="flex-row justify-evenly">
+        <TouchableOpacity 
+          className="flex-col my-2 mr-1 rounded-md border-2 bg-zinc-700 border-zinc-800 "
+          onPress={showDatePicker}
         >
-          {date.toUTCString()}
-        </Text>
-      </TouchableOpacity>
-        
+          <Text className="font-semibold text-center align-middle text-base text-white ml-2">
+              Escolha Data
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          className="flex-col my-2 ml-1 rounded-md border-2 bg-zinc-700 border-zinc-800 "
+          onPress={showTimePicker}
+        >
+          <Text className="font-semibold text-center align-middle text-base text-white ml-2">
+              Escolha Hora
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <Text className="font-semibold text-sm text-white"> 
+        Escolheu: {dateTime ? dayjs(dateTime).format('ddd, DD/MM/YYYY HH:mm') : 'Nenhuma data/hora selecionada'}
+      </Text>
     </View>
   )
 }
