@@ -1,9 +1,9 @@
-import { Check } from "phosphor-react";
+import { Check } from "phosphor-react"
 import { X } from 'phosphor-react'
-import { FormEvent, useState } from "react";
-import { api } from "../lib/axios";
-import dayjs from "dayjs";
-import { FORMAT_STYLE } from "../lib/dayjs";
+import { FormEvent, useState } from "react"
+import { api } from "../lib/axios"
+import dayjs from "dayjs"
+import { FORMAT_STYLE } from "../lib/dayjs"
 import * as Dialog from '@radix-ui/react-dialog'
 
 
@@ -13,7 +13,7 @@ interface editTradeProps{
   result : number,
   entryDate : Date,
   exitDate : Date 
-  onShowTradeEdited: () => void
+  onShowTradeEdited: (newTicker: string, newResult: number, isEdited: boolean) => void
 }
 
 export function EditTradeForm(props : editTradeProps){
@@ -28,18 +28,25 @@ export function EditTradeForm(props : editTradeProps){
       return (alert("TICKER INVALIDO!!!"))
     }
     
-    await api.patch(`trade/${props.id}/edit`, {
-      ticker,
-      result
-    }).then((response) => {
-        console.log('Trade updated successfully:', response.data);
+    if( ticker != props.ticker ||
+        result != props.result
+    )
+    {
+      try {
+        await api.patch(`trade/${props.id}/edit`, {
+          ticker,
+          result
+        })
+        console.log('Trade updated successfully')
         alert('Trade editado!')
         
-        props.onShowTradeEdited()
-      })
-      .catch((error) => {
-        console.error('Error updating trade:', error);
-      })
+        props.onShowTradeEdited(ticker, result, true)
+      } catch (error) {
+        console.error('Error updating trade:', error)
+        props.onShowTradeEdited(ticker, result, false)
+      }
+    }
+
   }
 
   return (
