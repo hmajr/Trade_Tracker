@@ -23,11 +23,16 @@ export function SummaryTable() {
   
   //Get summary table
   useEffect(() => {
-    api.get('summary').then(response => {
-      setSummary(response.data)
-    }).catch(error => {
-      console.error("Error getting summary trade table", error)
-    })
+    api.get('summary')
+      .then(response => {
+        setSummary(response.data)
+
+      })
+      .catch(error => {
+        console.error("Error getting summary trade table", error)
+      })
+
+      setIsLoading(false)
   }, [])
   
   // Scroll to finish 
