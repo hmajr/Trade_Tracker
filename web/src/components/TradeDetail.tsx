@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { PencilSimple, Trash } from 'phosphor-react'
 import { EditTradeForm } from './EditTradeForm'
 import { DeleteTradeForm } from './DeleteTradeForm'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FORMAT_STYLE } from '../lib/dayjs'
 
 interface TradeProps {
@@ -13,34 +13,54 @@ interface TradeProps {
   ticker: string,
   result: number,
   entry: Date,
-  exit: Date
+  exit: Date,
+  onTradeChanged: (isChanged: boolean) => void
 }
 
 export function TradeDetail (props : TradeProps) { //Habit
+  const [ticker, setTicker] = useState(props.ticker)
+  const [result, setResult] = useState(props.result)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   
 
-  function handleTradeEdited () {
+  function handleTradeEdited (newTicker: string, newResult: number, isEdited: boolean) {
     setShowEditModal(false) // Close the modal/container
+    console.log(`NEW ${newTicker} | ${newResult} -> ${isEdited}`)
+
+    if(isEdited)
+    {
+      setTicker(newTicker)
+      setResult(newResult)
+
+      props.onTradeChanged(true)
+    }
   }
-  function handleTradeDeleted () {
+
+  function handleTradeDeleted (isDeleted: boolean) {
     setShowDeleteModal(false) // Close the modal/container
+    if(isDeleted)
+    {
+      return props.onTradeChanged(true)
+    }
   }
 
-
+  useEffect(() => {
+    
+  }, [ticker, result])
+  
   return (
     <div className='mt-4 flex flex-col gap-3'>
       <span className='font-semibold text-zinc-400 text-xl'> 
-        {props.ticker} 
+        {ticker} 
       </span>
 
       <span className={clsx('mt-1 font-extrabold leading-tight text-2xl', {
-        'text-red-500' : props.result <= -10 ,
-        'text-zinc-300' : props.result > -10 && props.result < 10,
-        'text-green-500' : props.result >= 10 
+        'text-red-500' : result <= -10 ,
+        'text-zinc-300' : result > -10 && result < 10,
+        'text-green-500' : result >= 10 
       })}> 
-        {props.result >= 0 ? `R$ ${props.result},00` : `-R$ ${props.result*(-1)},00`}
+        {result >= 0 ? `R$ ${result},00` : `-R$ ${result*(-1)},00`}
       </span>
       <div className='mt-2 text-white font-semibold'>
         Entrada
@@ -68,8 +88,8 @@ export function TradeDetail (props : TradeProps) { //Habit
           (
             <EditTradeForm 
               id = {props.id}
-              ticker = {props.ticker}
-              result = {props.result}
+              ticker = {ticker}
+              result = {result}
               entryDate = {props.entry}
               exitDate = {props.exit}
               onShowTradeEdited = {handleTradeEdited}
