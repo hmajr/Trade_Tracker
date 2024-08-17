@@ -4,7 +4,7 @@ import { api } from '../lib/axios'
 
 interface TradeProps {
   id : string,
-  onShowTradeDeleted: () => void
+  onShowTradeDeleted: (isDeleted: boolean) => void
 }
 
 export function DeleteTradeForm( { id , onShowTradeDeleted } : TradeProps) {
@@ -12,14 +12,15 @@ export function DeleteTradeForm( { id , onShowTradeDeleted } : TradeProps) {
   async function handleDeleteTrade (event : FormEvent){
     event.preventDefault()
     
-    try {
-      await api.delete(`/trade/${id}/delete` )
-      alert("TRADE DELETADO!!!")
+    await api.delete(`/trade/${id}/delete` )
+      .then(() => {
+        alert("TRADE DELETADO!!!")
+        
+        return onShowTradeDeleted(true)
+      }).catch((error) => {
+        console.error('Error deleting trade:', error)
 
-    } catch (error) {
-      console.error('Error deleting trade:', error)
-    }
-    onShowTradeDeleted()
+      })
   }
 
   return (
