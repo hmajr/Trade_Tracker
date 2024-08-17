@@ -22,16 +22,27 @@ interface DayTradesResponse {
 
 export function TradesList( {date}: TradesListProps) {
   const [tradesInfo, setTradesInfo] = useState<DayTradesResponse | null>(null)
+  const [shouldRefreshTrades, setShouldRefreshTrades ] = useState(false)
 
-  useEffect(() => {
+  function handleTradeList() {
     api.get<DayTradesResponse>('dayTrades', { // Specify the expected response type
       params: {
         date: date.toISOString(),
       }
     }).then(response => {
       setTradesInfo(response.data)
+    }).catch(error => {
+      console.error("Can't get the trades info",error)
     })
+  }
+  
+  useEffect(() => {
+    handleTradeList()
   }, [])
+  useEffect(() => {
+    handleTradeList()
+  }, [date, shouldRefreshTrades])
+
   
   return (
     <div className='mt-6 flex flex-col gap-3'>
@@ -51,6 +62,7 @@ export function TradesList( {date}: TradesListProps) {
                 result={trade.result} 
                 entry={trade.entry_date} 
                 exit={trade.exit_date}
+                onTradeChanged={setShouldRefreshTrades}
               />
             </Popover.Content>
           </Popover.Root>
