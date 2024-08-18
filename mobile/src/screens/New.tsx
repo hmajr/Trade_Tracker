@@ -77,13 +77,12 @@ export function New() {
         <Text className="mt-6 text-white font-semibold text-base">
           Entry Date / Time
         </Text>
-        
-        <DateTime onDateChange={setEntryDate}/>
+        <DateTime onDateTimeChange={handleEntryDate}/>
 
         <Text className="mt-6 text-white font-semibold text-base">
           Exit Date / Time
         </Text>
-        <DateTime onDateChange={setExitDate}/>
+        <DateTime onDateTimeChange={handleExitDate}/>
         
         {/* <CheckBox checked title="Conta DEMO?"/> */}
 
