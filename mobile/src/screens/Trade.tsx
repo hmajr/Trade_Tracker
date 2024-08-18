@@ -1,14 +1,32 @@
-import { ScrollView, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, ScrollView, Text, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { BackButton } from "../components/BackButton";
 import dayjs from 'dayjs'
 import { ProgressBar } from "../components/progressbar";
+import { Loading } from "../components/Loading";
+import { api } from "../lib/axios";
+import * as Accordion from "@radix-ui/react-accordion";
 
 interface Params {
   date: string
 }
 
+interface DayInfoProps {
+  winTrades: string[],
+  possibleTrades: {
+    id: string,
+    ticker: string,
+    result: number,
+    entry_date: Date,
+    exit_date: Date
+  }[]
+}
+
 export function Trade () {
+  const [loading, setLoading] = useState(true)
+  const [dayInfo, setDayInfo] = useState<DayInfoProps | null>(null)
+
   const route = useRoute()
   const { date } = route.params as Params
 
@@ -16,6 +34,33 @@ export function Trade () {
   const dayOfWeek = parsedDate.format('dddd')
   const dayAndMonth = parsedDate.format('DD/MM')
 
+  async function fetchTrades() {
+    try {
+      setLoading(true)
+
+      const response = await api.get('/dayTrades', {
+        params : {
+          date
+        }
+      })
+      setDayInfo(response.data)
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Ops', 'Não foi possível carregas as informações dos trades.')
+    }finally{
+      setLoading(false)
+    }
+
+    if (loading){
+      return(
+        <Loading />
+      )
+    }
+  }
+  useEffect(() => {
+    fetchTrades()
+  }, [])
+  
   return (
     <View className="flex-1 bg-background px-8 pt-16">
       <ScrollView
@@ -33,6 +78,27 @@ export function Trade () {
         </Text>
 
         <ProgressBar progress={30} />
+
+        <View className="flex flex-col mt-6 gap-3">
+          {
+            dayInfo?.possibleTrades && dayInfo?.possibleTrades.map(trade => { 
+              return(
+               <View className="f" key={trade.id}>
+                    <Text className='font-semibold text-xl text-white leading-tight'>
+                        {trade.ticker} | {trade.result >= 0 ? `R$ ${trade.result}` : `-R$ ${trade.result*(-1)}`}
+                    </Text>
+                    {/* <View>
+                      <Text>{trade.id}</Text>
+                      <Text>{trade.ticker} </Text>
+                      <Text>{trade.result} </Text>
+                      <Text>{trade.entry_date.toString()} </Text>
+                      <Text>{trade.exit_date.toString()}</Text>
+                    </View> */}
+               </View>
+              )
+            })
+          }
+        </View>
       </ScrollView>
     </View>
   )
