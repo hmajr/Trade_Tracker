@@ -34,13 +34,13 @@ export function DeleteTradeForm( { id , onShowTradeDeleted } : TradeProps) {
         <p>Are you sure you want to delete this trade?</p>
         <div className='flex-row items-center align-middle mt-5 '>
           <button 
-            className='flex-1 mx-5 py-3 px-5 font-bold text-xl items-center text-center border-2 border-r-4 border-green-700 hover:border-green-500' 
+            className='flex-1 mx-5 py-3 px-5 font-bold text-xl items-center text-center border-2 border-r-4 border-green-700 hover:border-green-500 transition-colors duration-150' 
             onClick={handleDeleteTrade}
           >
             YES
           </button>
 
-          <Dialog.Close className='flex-1 mx-5 py-3 px-5 font-bold text-xl items-center text-center border-2 border-r-4 border-red-700 hover:border-red-500'>
+          <Dialog.Close className='flex-1 mx-5 py-3 px-5 font-bold text-xl items-center text-center border-2 border-r-4 border-red-700 hover:border-red-500 transition-colors duration-150'>
             NO
           </Dialog.Close>
         </div>
