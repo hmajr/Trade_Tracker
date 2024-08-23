@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 import { ProgressBar } from "../components/progressbar";
 import { Loading } from "../components/Loading";
 import { api } from "../lib/axios";
-// import * as Accordion from "@radix-ui/react-accordion";
+import Accordion from "../components/Accordion";
 
 interface Params {
   date: string
@@ -84,17 +84,23 @@ export function Trade () {
           {
             dayInfo?.possibleTrades && dayInfo?.possibleTrades.map(trade => { 
               return(
-               <View className="f" key={trade.id}>
-                    <Text className='font-semibold text-xl text-white leading-tight'>
-                        {trade.ticker} | {trade.result >= 0 ? `R$ ${trade.result}` : `-R$ ${trade.result*(-1)}`}
+               <View key={`${trade.id}`}>
+                    {/* <Text className='font-semibold text-xl text-white leading-tight'>
+                        
                     </Text>
-                    {/* <View>
-                      <Text>{trade.id}</Text>
-                      <Text>{trade.ticker} </Text>
-                      <Text>{trade.result} </Text>
-                      <Text>{trade.entry_date.toString()} </Text>
-                      <Text>{trade.exit_date.toString()}</Text>
+                    <View>
+                      <Text className="text-cyan-300">{trade.id}</Text>
+                      <Text className="text-cyan-300">{trade.ticker} </Text>
+                      <Text className="text-cyan-300">{trade.result} </Text>
+                      <Text className="text-cyan-300">{trade.entry_date.toString()} </Text>
+                      <Text className="text-cyan-300">{trade.exit_date.toString()}</Text>
                     </View> */}
+
+                  <Accordion 
+                    key={`${trade.id}-accordion`}
+                    title={`${trade.ticker} | ${trade.result >= 0 ? `R$ ${trade.result}` : `-R$ ${trade.result*(-1)}`} `}
+                    children={trade}
+                  />
                </View>
               )
             })
