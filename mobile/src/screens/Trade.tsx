@@ -85,17 +85,6 @@ export function Trade () {
             dayInfo?.possibleTrades && dayInfo?.possibleTrades.map(trade => { 
               return(
                <View key={`${trade.id}`}>
-                    {/* <Text className='font-semibold text-xl text-white leading-tight'>
-                        
-                    </Text>
-                    <View>
-                      <Text className="text-cyan-300">{trade.id}</Text>
-                      <Text className="text-cyan-300">{trade.ticker} </Text>
-                      <Text className="text-cyan-300">{trade.result} </Text>
-                      <Text className="text-cyan-300">{trade.entry_date.toString()} </Text>
-                      <Text className="text-cyan-300">{trade.exit_date.toString()}</Text>
-                    </View> */}
-
                   <Accordion 
                     key={`${trade.id}-accordion`}
                     title={`${trade.ticker} | ${trade.result >= 0 ? `R$ ${trade.result}` : `-R$ ${trade.result*(-1)}`} `}
