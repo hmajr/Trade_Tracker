@@ -19,13 +19,12 @@ type Summary = {
 }[] //same as Array<{ ... }>
 
 export function SummaryTable() {
-  const [isLoading, setIsLoading] = useState(true)
   const [summary, setSummary] = useState<Summary>([])
   const gridRef = useRef<HTMLDivElement>(null)
   
   //Get summary table
   useEffect(() => {
-    api.get('summary')
+    api.get('/summary')
       .then(response => {
         setSummary(response.data)
 
@@ -34,7 +33,6 @@ export function SummaryTable() {
         console.error("Error getting summary trade table", error)
       })
 
-      setIsLoading(false)
   }, [])
   
   // Scroll to finish 
@@ -42,7 +40,7 @@ export function SummaryTable() {
     if (gridRef.current) {
       gridRef.current.scrollLeft = gridRef.current.scrollWidth;
     }
-  }, [summary])
+  }, [summary, gridRef.current])
 
   const isScrollbarNeeded = () => {
     if (gridRef.current) {
@@ -53,8 +51,11 @@ export function SummaryTable() {
 
   return(
     <div>
-      {isLoading && <LoadingScreen />}
-      <div className="w-full flex">
+      {/* Conditionally render LoadingScreen or grid based on summary data */}
+      {summary.length === 0 ? (
+        <LoadingScreen />
+      ) : (
+        <div className="w-full flex">
         {/* Days of Week */}
         <div className="grid grid-rows-7 gap-3 grid-flow-row">
           {weekDays.map((weekDay, i)=>{
@@ -68,7 +69,7 @@ export function SummaryTable() {
         
         {/* Grid row of Days */}
         <div 
-          // ref={gridRef}
+          ref={gridRef}
           className={`grid grid-rows-7 gap-3 grid-flow-col ${isScrollbarNeeded()? 'overflow-x-scroll':'overflow-x-hidden'} scrollbar scrollbar-track-rounded-full scrollbar-thumb-zinc-200 scrollbar-track-transparent`}
           style={{ width: gridRef.current ? gridRef.current.offsetWidth : 'auto' }}
           >
@@ -106,8 +107,9 @@ export function SummaryTable() {
               />
             )
           })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
-  )
+  );
 }
