@@ -3,13 +3,13 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 //numero de dados criados
-const NUM_SEEDS =  20
+const NUM_SEEDS =  350
 console.log("Seed Nubmber: " + NUM_SEEDS)
 
 const tickers = ["WIN", "WDO"]
 //Range de data dos trades criados
-const START_DATE = new Date("2024-07-01T01:00:00.000z")
-const END_DATE = new Date("2024-07-23T23:59:00.000z")
+const START_DATE = new Date("2024-01-01T01:00:00.000z")
+const END_DATE = new Date()
 
 //Range resultado trade
 const MIN_RESULT = -550
