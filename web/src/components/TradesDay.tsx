@@ -14,8 +14,15 @@ interface TradeDayProps {
 }
 
 export function TradesDay ({date, defaultWinner = 0, defaultAmount = 0} : TradeDayProps) { //Habit
-  
-  const completedRatio = CompletedRatioCalculation( defaultAmount, defaultWinner)
+  const [amount, setAmount] = useState(defaultAmount)
+  const [winner, setWinner] = useState(defaultWinner)
+
+  function handleTradeInfo(newAmount: number, newWinner: number){
+    setAmount(newAmount)
+    setWinner(newWinner)
+  }
+
+  const completedRatio = CompletedRatioCalculation( amount, winner)
 
   const dayAndMonth = dayjs(date).format('DD/MM')
   const dayOfWeek = dayjs(date).format('dddd')
@@ -45,7 +52,7 @@ export function TradesDay ({date, defaultWinner = 0, defaultAmount = 0} : TradeD
           
           <ProgressBar progress={completedRatio}/>
 
-          <TradesList date={date}/>
+          <TradesList date={date} onChangeTrades={handleTradeInfo}/>
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

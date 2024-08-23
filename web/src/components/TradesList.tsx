@@ -5,6 +5,7 @@ import { api } from '../lib/axios';
 
 interface TradesListProps {
   date: Date
+  onChangeTrades: (amount: number, winner: number) => void
 }
 
 interface TradesInfo {
@@ -20,7 +21,7 @@ interface DayTradesResponse {
   winTrades: string[]; 
 }
 
-export function TradesList( {date}: TradesListProps) {
+export function TradesList( {date, onChangeTrades}: TradesListProps) {
   const [tradesInfo, setTradesInfo] = useState<DayTradesResponse | null>(null)
   const [shouldRefreshTrades, setShouldRefreshTrades ] = useState(false)
 
@@ -31,17 +32,22 @@ export function TradesList( {date}: TradesListProps) {
       }
     }).then(response => {
       setTradesInfo(response.data)
+      onChangeTrades(response.data.possibleTrades.length, response.data.winTrades.length)
     }).catch(error => {
       console.error("Can't get the trades info",error)
     })
   }
-  
+
   useEffect(() => {
     handleTradeList()
   }, [])
   useEffect(() => {
-    handleTradeList()
-  }, [date, shouldRefreshTrades])
+    if(shouldRefreshTrades){
+      handleTradeList()
+
+      setShouldRefreshTrades(false)
+    }
+  }, [shouldRefreshTrades])
 
   
   return (
