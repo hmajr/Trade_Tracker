@@ -22,11 +22,7 @@ export function New() {
           !dayjs(entry_date).isValid() ||
           !dayjs(entry_date).isBefore(exit_date)
         ){
-        return (
-          console.log("Verifica as info aí carai!!! \n",
-            ticker, result, entry_date, exit_date
-          )
-        )
+        throw new Error (`Verifica as info: \nT:${ticker} \nR:${result} \nED:${entry_date} \nEE:${exit_date}\n`)
       }
 
       await api.post('/trades', {ticker, result, entry_date, exit_date})
@@ -78,12 +74,12 @@ export function New() {
         <Text className="mt-6 text-white font-semibold text-base">
           Entry Date / Time
         </Text>
-        <DateTime onDateTimeChange={handleEntryDate}/>
+        <DateTime onDateTimeChange={setEntryDate}/>
 
         <Text className="mt-6 text-white font-semibold text-base">
           Exit Date / Time
         </Text>
-        <DateTime onDateTimeChange={handleExitDate}/>
+        <DateTime onDateTimeChange={setExitDate}/>
         
         {/* <CheckBox checked title="Conta DEMO?"/> */}
 
