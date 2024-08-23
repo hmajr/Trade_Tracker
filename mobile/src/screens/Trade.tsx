@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { Alert, ScrollView, Text, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
@@ -6,7 +7,7 @@ import dayjs from 'dayjs'
 import { ProgressBar } from "../components/progressbar";
 import { Loading } from "../components/Loading";
 import { api } from "../lib/axios";
-import * as Accordion from "@radix-ui/react-accordion";
+// import * as Accordion from "@radix-ui/react-accordion";
 
 interface Params {
   date: string

@@ -1,3 +1,4 @@
+import React from "react";
 import { Dimensions, TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { generateProgressPercentage } from "../utils/generate-progress-percentage";
 import clsx from "clsx";

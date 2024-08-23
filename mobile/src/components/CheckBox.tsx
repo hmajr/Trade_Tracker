@@ -1,3 +1,4 @@
+import React from "react";
 import { TouchableOpacity, View, Text, TouchableOpacityProps } from "react-native";
 import {Feather } from '@expo/vector-icons'
 import colors from "tailwindcss/colors";

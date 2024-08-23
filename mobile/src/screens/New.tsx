@@ -1,3 +1,4 @@
+import React from "react";
 import { ScrollView, TextInput, Text , View, TouchableOpacity, Alert } from "react-native";
 import { BackButton } from "../components/BackButton";
 import { DateTime } from "../components/DateTime";
