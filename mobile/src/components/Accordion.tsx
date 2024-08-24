@@ -31,16 +31,24 @@ export const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
 
   return (
     <View className="border-b-2 border-zinc-200">
-      <TouchableOpacity onPress={toggleAccordion} className="p-3 bg-slate-50">
+      <TouchableOpacity onPress={toggleAccordion} className="p-3 bg-zinc-900">
         <View className='flex'>
-        <Text className="font-semibold text-lg text-black">{title}</Text>
+          <Text className="font-semibold text-lg text-white">{title}</Text>
         </View>
       </TouchableOpacity>
       <Animated.View className="overflow-hidden" style={{ height: animatedHeight }}>
-        <Text className='text-white'>Ticker: {children.ticker}</Text>
-        <Text className='text-white'>Result: {children.result}</Text>
-        <Text className='text-white'>Entry Date: {dayjs(children.entry_date).format(FORMAT_STYLE)}</Text>
-        <Text className='text-white'>Exit Date: {dayjs(children.exit_date).format(FORMAT_STYLE)}</Text>
+        <Text className='text-white  font-bold'>
+          Ticker: <Text className='font-normal'>{children.ticker}</Text>
+        </Text>
+        <Text className='text-white  font-bold'>
+          Result: <Text className='font-normal'>{`R$ ${children.result}`}</Text>
+        </Text>
+        <Text className='text-white  font-bold'>
+          Entry Date: <Text className='font-normal'>{dayjs(children.entry_date).format(FORMAT_STYLE)}</Text>
+        </Text>
+        <Text className='text-white  font-bold'>
+          Exit Date: <Text className='font-normal'>{dayjs(children.exit_date).format(FORMAT_STYLE)}</Text>
+        </Text>
       </Animated.View>
     </View>
   );
