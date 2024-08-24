@@ -38,11 +38,6 @@ export const Accordion: React.FC<AccordionProps> = ({ title, children, onEdition
     setExpanded(false)
     onEdition(value)
   }
-  // useEffect(() => {
-  //   if(isEdited){
-  //     setExpanded(false)
-  //   }
-  // }, [isEdited])
 
   return (
     <View className="border-b-2 border-zinc-200">
