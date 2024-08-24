@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { Alert, ScrollView, Text, View } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useFocusEffect } from "@react-navigation/native";
 import { BackButton } from "../components/BackButton";
 import dayjs from 'dayjs'
 import { ProgressBar } from "../components/progressbar";
@@ -28,6 +28,7 @@ interface DayInfoProps {
 export function Trade () {
   const [loading, setLoading] = useState(true)
   const [dayInfo, setDayInfo] = useState<DayInfoProps | null>(null)
+  const [isEdited, setIsEdited] = useState(false)
 
   const route = useRoute()
   const { date } = route.params as Params
@@ -66,6 +67,13 @@ export function Trade () {
   useEffect(() => {
     fetchTrades()
   }, [])
+  
+  useFocusEffect(useCallback(() => {
+    if(isEdited){
+      fetchTrades()
+      setIsEdited(false)
+    }
+  }, [isEdited]))
   
   return (
     <View className="flex-1 bg-background px-8 pt-16">

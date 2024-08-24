@@ -8,6 +8,7 @@ export declare global{
       }
       editTrade: {
         trade: TradeInfo
+        onEditComplete: onEdition
       }
     }
   }

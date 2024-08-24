@@ -1,13 +1,13 @@
-import React from "react";
-import { ScrollView, TextInput, Text , View, TouchableOpacity, Alert } from "react-native";
-import { BackButton } from "../components/BackButton";
+import React from "react"
+import { ScrollView, TextInput, Text , View, TouchableOpacity, Alert } from "react-native"
+import { BackButton } from "../components/BackButton"
 import { Feather } from "@expo/vector-icons"
-import colors from "tailwindcss/colors";
-import dayjs from "dayjs";
-import { useState } from "react";
-import { api } from "../lib/axios";
-import { useRoute } from "@react-navigation/native";
-import { FORMAT_STYLE } from "../lib/dayjs";
+import colors from "tailwindcss/colors"
+import dayjs from "dayjs"
+import { useState } from "react"
+import { api } from "../lib/axios"
+import { useNavigation, useRoute } from "@react-navigation/native"
+import { FORMAT_STYLE } from "../lib/dayjs"
 
 interface Params {
   trade: TradeInfo
@@ -21,46 +21,42 @@ type TradeInfo = {
   exit_date: Date
 }
 
-interface editTradeProps{
-  trade : TradeInfo
-  // onShowTradeEdited: (newTicker: string, newResult: number, isEdited: boolean) => void
-}
 
 export function EditTrade () {
   const route = useRoute()
-  const { trade } = route.params as Params
+  const navigation = useNavigation()
+
+  const { trade, onEditComplete } = route.params as Params & { onEditComplete: (isEdited: boolean) => void }
   
   const [ticker, setTicker] = useState(trade.ticker)
   const [result, setResult] = useState(trade.result)
-  const [entry_date, setEntryDate] = useState(trade.entry_date)
-  const [exit_date, setExitDate] = useState(trade.exit_date)
+  const entry_date = trade.entry_date
+  const exit_date = trade.exit_date
   
   async function handleEditTrade() {
-    alert("EDITOU TRADE!")
-    // if( !ticker.trim() )
-    // {
-    //   return (alert("TICKER INVALIDO!!!"))
-    // }
+    if( !ticker.trim() )
+    {
+      return (alert("TICKER INVALIDO!!!"))
+    }
     
-    // if( ticker != trade.ticker ||
-    //     result != trade.result
-    // )
-    // {
-    //   try {
-    //     await api.patch(`trade/${trade.id}/edit`, {
-    //       ticker,
-    //       result
-    //     })
-    //     console.log('Trade updated successfully')
-    //     alert('Trade editado!')
+    if( ticker != trade.ticker || result != trade.result )
+    {
+      await api.patch(`trade/${trade.id}/edit`, {
+        ticker,
+        result
+      }).then(() => {
         
-    //     // props.onShowTradeEdited(ticker, result, true)
-    //   } catch (error) {
-    //     console.error('Error updating trade:', error)
-    //     // props.onShowTradeEdited(ticker, result, false)
-    //   }
-    // }
+        console.log('Trade updated successfully')
+        alert('Trade editado!')
 
+        onEditComplete(true)
+      }).catch((error) => {
+        console.error('Error updating trade:', error)
+        onEditComplete(false)
+      }).finally(() => {
+        navigation.goBack()
+      })
+    }
   }
 
   return (
@@ -105,11 +101,9 @@ export function EditTrade () {
         </Text>
         <Text className="text-white text-lg">{dayjs(exit_date).format(FORMAT_STYLE)}</Text>
         
-        {/* <CheckBox checked title="Conta DEMO?"/> */}
-
         <TouchableOpacity 
           className="w-full h-14 flex-row items-center justify-center bg-yellow-600 rounded-md mt-6"
-          onPress={() => {handleEditTrade}}
+          onPress={handleEditTrade}
         >
           <Feather 
             name="edit"

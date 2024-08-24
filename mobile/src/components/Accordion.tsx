@@ -17,11 +17,12 @@ type TradeInfo = {
 interface AccordionProps {
   title: string,
   children: TradeInfo,
+  onEdition: (value: boolean) => void
 }
 
-export const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
+export const Accordion: React.FC<AccordionProps> = ({ title, children, onEdition }) => {
   const [expanded, setExpanded] = useState(false)
-  const [isEdited, setIsEdited] = useState(false)
+  // const [isEdited, setIsEdited] = useState(false)
   const animatedHeight = useRef(new Animated.Value(0)).current;
 
   const toggleAccordion = () => {
@@ -33,14 +34,15 @@ export const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
     }).start();
   };
 
-  const handleEditedTrade = ( value : boolean) => {
-    setIsEdited(value)
+  function handleEdition ( value : boolean) {
+    setExpanded(false)
+    onEdition(value)
   }
-  useEffect(() => {
-    if(isEdited){
-      setExpanded(false)
-    }
-  }, [isEdited])
+  // useEffect(() => {
+  //   if(isEdited){
+  //     setExpanded(false)
+  //   }
+  // }, [isEdited])
 
   return (
     <View className="border-b-2 border-zinc-200">
@@ -62,9 +64,13 @@ export const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
         <Text className='text-white  font-bold'>
           Exit Date: <Text className='font-normal'>{dayjs(children.exit_date).format(FORMAT_STYLE)}</Text>
         </Text>
+        
         <View className='flex flex-row justify-center between ' >
-          <EditButton id={children.id} ticker={children.ticker} result={children.result} entry_date={children.entry_date} exit_date={children.exit_date}/>
-          <DeleteButton tradeId={children.id} onShowTradeDeleted={handleEditedTrade}/>
+          <EditButton 
+            trade={children}
+            onEdition={handleEdition}
+          />
+          <DeleteButton tradeId={children.id} onShowTradeDeleted={handleEdition}/>
         </View>
       </Animated.View>
     </View>

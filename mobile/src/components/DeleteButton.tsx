@@ -9,7 +9,7 @@ interface TradeProps {
 }
 
 export function DeleteButton( props : TradeProps){
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false)
+  // const [showConfirmDelete, setShowConfirmDelete] = useState(false)
 
   async function handleConfirmDelete() {
     

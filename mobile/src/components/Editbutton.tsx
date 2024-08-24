@@ -10,14 +10,18 @@ type TradeInfo = {
   entry_date: Date,
   exit_date: Date
 }
+interface editButtonProps{
+  trade: TradeInfo
+  onEdition: (value: boolean) => void; 
+}
 
-export function EditButton( trade : TradeInfo){
+export function EditButton( {trade, onEdition } : editButtonProps){
   const { navigate } = useNavigation()
 
   return(
     <TouchableOpacity 
       className="flex flex-row items-center px-5 py-2 mt-4 mr-3 rounded bg-yellow-600"
-      onPress={() => navigate ('editTrade', {trade} )}
+      onPress={() => navigate('editTrade', { trade, onEditComplete: onEdition })}
     >
       <Feather name="edit" size={16} color="white" className="mr-2" />
       <Text className="text-white font-bold">EDITAR</Text>
