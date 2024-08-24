@@ -5,7 +5,7 @@ const { Navigator, Screen } = createNativeStackNavigator();
 import { Home } from '../screens/Home';
 import { New } from '../screens/New';
 import { Trade } from '../screens/Trade';
-
+import { EditTrade } from '../screens/EditTrade';
 
 export function AppRoutes() {
   return (
@@ -21,6 +21,10 @@ export function AppRoutes() {
       <Screen 
         name="trade"
         component={Trade}
+      />
+      <Screen 
+        name="editTrade"
+        component={EditTrade}
       />
       
     </Navigator>

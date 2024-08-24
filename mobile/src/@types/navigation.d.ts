@@ -6,6 +6,9 @@ export declare global{
       trade: {
         date: string
       }
+      editTrade: {
+        trade: TradeInfo
+      }
     }
   }
 }
