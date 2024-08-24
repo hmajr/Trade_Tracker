@@ -8,6 +8,7 @@ import { ProgressBar } from "../components/progressbar";
 import { Loading } from "../components/Loading";
 import { api } from "../lib/axios";
 import Accordion from "../components/Accordion";
+import { generateProgressPercentage } from "../utils/generate-progress-percentage";
 
 interface Params {
   date: string
@@ -34,6 +35,10 @@ export function Trade () {
   const parsedDate = dayjs(date)
   const dayOfWeek = parsedDate.format('dddd')
   const dayAndMonth = parsedDate.format('DD/MM')
+
+  const tradesProgress = dayInfo?.possibleTrades.length 
+    ? generateProgressPercentage(dayInfo.possibleTrades.length, dayInfo.winTrades.length) 
+    : 0
 
   async function fetchTrades() {
     try {
@@ -78,7 +83,7 @@ export function Trade () {
           {dayAndMonth}
         </Text>
 
-        <ProgressBar progress={30} />
+        <ProgressBar progress={tradesProgress} />
 
         <View className="flex flex-col mt-6 gap-3">
           {
