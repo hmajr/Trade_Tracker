@@ -1,7 +1,10 @@
 import dayjs from 'dayjs';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Animated } from 'react-native';
 import { FORMAT_STYLE } from '../lib/dayjs';
+
+import { DeleteButton } from './DeleteButton';
+import { EditButton } from './Editbutton';
 
 type TradeInfo = {
   id: string,
@@ -12,22 +15,32 @@ type TradeInfo = {
 }
 
 interface AccordionProps {
-  title: string;
-  children: TradeInfo;
+  title: string,
+  children: TradeInfo,
 }
 
 export const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false)
+  const [isEdited, setIsEdited] = useState(false)
   const animatedHeight = useRef(new Animated.Value(0)).current;
 
   const toggleAccordion = () => {
     setExpanded(!expanded);
     Animated.timing(animatedHeight, {
       toValue: expanded ? 0 : 150, // Adjust 150 to your desired content height
-      duration: 300,
+      duration: 350,
       useNativeDriver: false, 
     }).start();
   };
+
+  const handleEditedTrade = ( value : boolean) => {
+    setIsEdited(value)
+  }
+  useEffect(() => {
+    if(isEdited){
+      setExpanded(false)
+    }
+  }, [isEdited])
 
   return (
     <View className="border-b-2 border-zinc-200">
@@ -49,6 +62,10 @@ export const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
         <Text className='text-white  font-bold'>
           Exit Date: <Text className='font-normal'>{dayjs(children.exit_date).format(FORMAT_STYLE)}</Text>
         </Text>
+        <View className='flex flex-row justify-center between ' >
+          <EditButton id={children.id} ticker={children.ticker} result={children.result} entry_date={children.entry_date} exit_date={children.exit_date}/>
+          <DeleteButton tradeId={children.id} onShowTradeDeleted={handleEditedTrade}/>
+        </View>
       </Animated.View>
     </View>
   );
