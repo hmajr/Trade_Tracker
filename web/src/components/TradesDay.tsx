@@ -1,22 +1,35 @@
-import '../styles/TradesDay.css'
+import { useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
-import { ProgressBar } from './ProgressBar';
 import clsx from 'clsx';
-import { TradeDetail } from './TradeDetail';
+import dayjs from 'dayjs';
+import '../styles/TradesDay.css'
+import { ProgressBar } from './ProgressBar';
+import { TradesList } from './TradesList';
+import { CompletedRatioCalculation } from '../utils/completed-ratio-calculation';
 
 interface TradeDayProps {
-  winner: number
-  ammount: number
+  date: Date
+  defaultWinner?: number
+  defaultAmount?: number
 }
 
-export function TradesDay (props : TradeDayProps) { //Habit
-  
-  
-  const completedRatio = Math.round((props.winner/props.ammount) * 100 )
+export function TradesDay ({date, defaultWinner = 0, defaultAmount = 0} : TradeDayProps) { //Habit
+  const [amount, setAmount] = useState(defaultAmount)
+  const [winner, setWinner] = useState(defaultWinner)
+
+  function handleTradeInfo(newAmount: number, newWinner: number){
+    setAmount(newAmount)
+    setWinner(newWinner)
+  }
+
+  const completedRatio = CompletedRatioCalculation( amount, winner)
+
+  const dayAndMonth = dayjs(date).format('DD/MM')
+  const dayOfWeek = dayjs(date).format('dddd')
 
   return (
     <Popover.Root>
-      <Popover.Trigger className={clsx('w-10 h-10 border-2 rounded-lg', {
+      <Popover.Trigger className={clsx('w-10 h-10 border-2 rounded-lg transition-colors', {
         'bg-yellow-400 border-orange-300' : completedRatio == 100,
         'bg-green-500 border-green-400' : completedRatio >= 80 && completedRatio < 100,
         'bg-green-600 border-green-500' : completedRatio >= 60 && completedRatio < 80,
@@ -29,49 +42,17 @@ export function TradesDay (props : TradeDayProps) { //Habit
       <Popover.Portal>
         <Popover.Content className='min-w-[320px] p-6 rounded-2xl bg-zinc-900 flex flex-col'>
           <span className='font-semibold text-zinc-400'> 
-            terça-feira 
+            {dayOfWeek} 
           </span>
           <span className='mt-1 font-extrabold leading-tight text-3xl'> 
-            16/07 
+            {dayAndMonth} 
           </span>
 
+          <Popover.Arrow height={8} width={16} className='fill-zinc-900' />
+          
           <ProgressBar progress={completedRatio}/>
 
-          <div className='mt-6 flex flex-col gap-3'>
-            {/* Popover Trade Details */}
-            <Popover.Root>
-              <Popover.Trigger>
-                  <span className='font-semibold text-xl text-white leading-tight'>
-                    WDO | R$ 549.00
-                  </span>
-              </Popover.Trigger>
-              <Popover.Content className='min-w-[320px] p-6 rounded-2xl bg-zinc-900 border-2 border-zinc-500 flex flex-col'>
-                <TradeDetail ticker='WDO' result={549.00} entry={new Date().toISOString()} exit={new Date().toISOString()}/>
-              </Popover.Content>
-            </Popover.Root>
-            <Popover.Root>
-              <Popover.Trigger>
-                  <span className='font-semibold text-xl text-white leading-tight'>
-                    WIN | - R$ 149.00
-                  </span>
-              </Popover.Trigger>
-              <Popover.Content className='min-w-[320px] p-6 rounded-2xl bg-zinc-900 border-2 border-zinc-500 flex flex-col'>
-                <TradeDetail ticker='WIN' result={-149.00} entry={new Date().toISOString()} exit={new Date().toISOString()}/>
-              </Popover.Content>
-            </Popover.Root>
-            <Popover.Root>
-              <Popover.Trigger>
-                  <span className='font-semibold text-xl text-white leading-tight'>
-                    WIN | R$ 7.00
-                  </span>
-              </Popover.Trigger>
-              <Popover.Content className='min-w-[320px] p-6 rounded-2xl bg-zinc-900 border-2 border-zinc-500 flex flex-col'>
-                <TradeDetail ticker='WIN' result={7.00} entry={new Date().toISOString()} exit={new Date().toISOString()}/>
-              </Popover.Content>
-            </Popover.Root>
-          </div>
-
-          <Popover.Arrow height={8} width={16} className='fill-zinc-900' />
+          <TradesList date={date} onChangeTrades={handleTradeInfo}/>
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

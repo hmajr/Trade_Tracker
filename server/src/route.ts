@@ -16,7 +16,7 @@ export async function appRoutes(app : FastifyInstance){
     try {
       const { ticker, result , entry_date, exit_date } = createTradeBody.parse(request.body)
     
-      await prisma.trade.create({
+      var tradeUID = await prisma.trade.create({
         data: {
           ticker,
           entry_date,
@@ -25,6 +25,41 @@ export async function appRoutes(app : FastifyInstance){
         }
       })
 
+      const exitDateWithoutTime = dayjs(exit_date).set('hour', 0).set('minute', 0).set('second', 0).toDate()
+      //search for unique date for a trade
+      const existingDay = await prisma.day.findUnique({
+        where: {
+          date: exitDateWithoutTime,
+        },
+      });
+    
+      if(!existingDay){
+        await prisma.day.create({
+          data: {
+            date: exitDateWithoutTime,
+            dayTrades: {
+              create: {
+                trade_id : tradeUID.id,
+              }
+            }
+          }
+        })
+      }
+      else{
+        await prisma.day.update({
+          where: {
+            date: exitDateWithoutTime,
+          },
+          data: {
+            dayTrades: {
+              create: {
+                trade_id: tradeUID.id,
+              },
+            },
+          },
+        });
+      }
+      // FALTA REALIZAR O LINK TABLE DAY -> CREATED_TRADE
       reply.code(201).send({ message: 'Trade created successfully' })
     } catch (error) {
       console.error(error)
@@ -45,19 +80,17 @@ export async function appRoutes(app : FastifyInstance){
 
     const possibleTrades = await prisma.trade.findMany({
       where: {
-        entry_date: {
-          gt: startDate,
-        },
         exit_date: {
+          gte: startDate,
           lte: endDate,
         }
       }
     })
 
     //Filter/Get WIN Trades IDs
-    const winTrades = possibleTrades.filter(winTrade => winTrade.result > 0).map(trade =>{
+    const winTrades = possibleTrades?.filter(winTrade => winTrade.result > 0).map(trade =>{
       return trade.id
-    })
+    }) ?? []
 
     return {
       possibleTrades,
@@ -66,22 +99,31 @@ export async function appRoutes(app : FastifyInstance){
   })
 
   //Update trade result (:id)
-  app.patch('/trades/:id/edit', async (request) => {
+  app.patch('/trade/:id/edit', async (request) => {
     
     const editTradeParams = z.object({
-      id: z.string().uuid(),
+      id: z.string(),
     })
-    const editTradeQuery = z.object({
+    const editTradeBody = z.object({
+      ticker : z.string(),
       result : z.coerce.number(),
     })
     
+
     const { id }  = editTradeParams.parse(request.params)
-    const { result } = editTradeQuery.parse(request.query)
+    const { ticker, result }  = editTradeBody.parse(request.body)
     
     const updatedTrade = await prisma.trade.update({
       where: { id: id },
-      data: { result: result },
+      data: { 
+        ticker: ticker,
+        result: result,
+       },
     });
+
+    if (!updatedTrade) {
+      throw new Error('Trade not found')
+    }
 
     return updatedTrade
   })
@@ -91,28 +133,23 @@ export async function appRoutes(app : FastifyInstance){
     
     const deleteTradeParams = z.object({
       id : z.string().uuid(),
-      date : z.coerce.date(),
     })
 
-    const {id } = deleteTradeParams.parse(request.params)
-    const { date } = deleteTradeParams.parse(request.query)
+    const { id } = deleteTradeParams.parse(request.params)
 
-    const day = await prisma.day.findUnique({
+    const trade = await prisma.trade.findUnique({
       where: {
-        date : new Date(date),
+        id : id
       }
     })
-
-    if( !day ){
-      return response.status(404).send('Day not found')
+    
+    if( !trade ){
+      return response.status(404).send("Day not found")
     }
 
-    const dayTrade = await prisma.dayTrade.findUnique({
+    const dayTrade = await prisma.dayTrade.findFirst({
       where: {
-        day_id_trade_id : {
-          day_id : day.id,
-          trade_id : id,
-        }
+        trade_id : id,
       }
     })
 
@@ -120,19 +157,24 @@ export async function appRoutes(app : FastifyInstance){
       return response.status(404).send('Trade not found in this day')
     }
 
-    await prisma.dayTrade.delete({
-      where : {
-        id : dayTrade.id,
-      }
-    })
+    try {
+      await prisma.dayTrade.delete({
+          where: {
+              id: dayTrade.id,
+          },
+      });
 
-    const deletedTrade = await prisma.trade.delete({
-      where : {
-        id : id,
-      }
-    })
+      const deletedTrade = await prisma.trade.delete({
+          where: {
+              id: id,
+          },
+      });
 
-    return response.send(deletedTrade)
+      return response.send(deletedTrade);
+    } catch (error) {
+        console.error('Error deleting trade:', error); // Log the error for debugging
+        return response.status(500).send({error: 'Error deleting trade'});
+    }
   })
 
   //Get summary trades from a day
@@ -157,7 +199,7 @@ export async function appRoutes(app : FastifyInstance){
             ON DT.trade_id = T.id
           WHERE DT.day_id = D.id 
             AND T.result > 0.0
-        ) as win_trades
+        ) as winTrades
       FROM days D
     `
 

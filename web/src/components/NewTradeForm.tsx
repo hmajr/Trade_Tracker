@@ -1,20 +1,51 @@
-import { Check } from "phosphor-react";
-import { FormEvent, useState } from "react";
+import dayjs from "dayjs";
+import { Check, Prohibit} from "phosphor-react";
+import { FormEvent, useEffect, useState } from "react";
+import { api } from "../lib/axios";
+import clsx from "clsx";
 
 export function NewTradeForm(){
   const [ticker, setTicker] = useState('')
   const [result, setResult] = useState(0.0)
-  const [entryDate, setEntryDate] = useState(new Date())
-  const [exitDate, setExitDate] = useState(new Date())
+  const [entry_date, setEntryDate] = useState(new Date())
+  const [exit_date, setExitDate] = useState(new Date())
+  const [isValid = false, setIsValid] = useState(Boolean)
 
-  function createNewTrade(event : FormEvent){
+  async function createNewTrade(event : FormEvent){
     event.preventDefault()
 
-    console.log(ticker)
-    console.log(result)
-    console.log(entryDate)
-    console.log(exitDate)
+    if( !ticker || 
+        !dayjs(exit_date).isValid() || 
+        !dayjs(entry_date).isValid() ||
+        !dayjs(entry_date).isBefore(exit_date)
+      ){
+      return (console.log("TRADE INVALIDO!!!"))
+    }
+
+
+    await api.post('trades', {
+      ticker,
+      result,
+      entry_date,
+      exit_date
+    }).then((response) => {
+      console.log('Trade created successfully:', response.data);
+    })
+    .catch((error) => {
+      console.error('Error creating trade:', error);
+    })
+
+    alert('Trade criado !!!')
   }
+
+  //set isValid true if input is inserted
+  useEffect(() => {
+    (ticker && (result || result == 0) && entry_date && exit_date && dayjs(entry_date).isBefore(exit_date))
+      ?
+        setIsValid(true)
+        :
+        setIsValid(false)
+  }, [ticker, result, entry_date, exit_date])
   
   return (
     <form onSubmit={createNewTrade} className="w-full flex flex-col mt-6">
@@ -71,8 +102,21 @@ export function NewTradeForm(){
         autoFocus
         onChange={event => setExitDate(new Date(event.target.value))}
       />
-      <button type="submit" className="mt-6 rounded-lg p-4 gap-3 flex items-center justify-center font-semibold bg-green-600 hover:bg-green-400">
-        <Check size={20} weight="bold" />
+      
+      <button type="submit" className={ clsx('mt-6 rounded-lg p-4 gap-3 flex items-center justify-center font-semibold transition-colors',
+          {
+            'bg-green-600 hover:bg-green-400' : isValid,
+            'bg-zinc-600 hover:bg-zinc-500 pointer-events-none' : !isValid
+          }
+        )}
+      >
+        {
+          isValid ?  
+            <Check size={20} weight="bold" />  
+            :
+            <Prohibit size={20} weight="bold" />
+        }
+        
         Confirmar
       </button>
     </form>
