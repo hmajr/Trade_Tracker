@@ -1,0 +1,50 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20 # Adjust if needed
+
+      - name: Install dependencies (backend)
+        working-directory: ./server # Adjust if your backend is in a different directory
+        run: npm install
+
+      - name: Build backend
+        working-directory: ./server
+        run: npm run build # Adjust if your build script is different
+
+      - name: Install dependencies (frontend)
+        working-directory: ./web # Adjust if your frontend is in a different directory
+        run: npm install
+
+      - name: Build frontend
+        working-directory: ./web
+        run: npm run build # Adjust if your build script is different
+
+      - name: Deploy to Render (backend)
+        uses: render-com/deploy-action@v1
+        with:
+          service-id: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+          build-command: "npm install && npm run build" 
+          start-command: "pm2-runtime start ecosystem.config.js --env production" 
+
+      - name: Deploy to Render (frontend)
+        uses: render-com/deploy-action@v1
+        with:
+          service-id: ${{ secrets.RENDER_FRONTEND_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+          build-command: "npm install && npm run build"
