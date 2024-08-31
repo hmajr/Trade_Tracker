@@ -59,6 +59,14 @@ export function EditTrade () {
     }
   }
 
+  const handleInputChange = (text : string) => {
+    // Allow only digits, the minus sign, and a single decimal point
+    const validText = text.replace(/[^-\d.]/g, '');
+    // Ensure there's at most one minus sign at the beginning
+    const cleanedText = validText.replace(/(?!^)-/g, '');
+    setResult(Number(cleanedText));
+  };
+
   return (
     <View className="flex-1 bg-background px-8 pt-16">
       <ScrollView 
@@ -88,7 +96,7 @@ export function EditTrade () {
           className="h-12 pl-4 rounded-lg mt-3 bg-zinc-900 text-white border-2 border-zinc-800 focus:border-2 focus:border-green-600"
           keyboardType="numeric"
           value={`${result}`}
-          onChangeText={(value)=>{setResult(Number(value))}}
+          onChangeText={(value)=>{handleInputChange(value)}}
           / > 
 
         <Text className="mt-6 text-white font-semibold text-base">
