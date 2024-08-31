@@ -12,6 +12,7 @@
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@babel/plugin-transform-template-literals": "^7.24.7",
     "@expo-google-fonts/inter": "^0.2.3",
+    "@expo/vector-icons": "14.0.2",
     "@react-native-community/datetimepicker": "^8.2.0",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.10.0",
