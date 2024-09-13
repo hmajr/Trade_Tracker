@@ -5,7 +5,7 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 
 const WEEK_DAYS = 7;
-const SCREEN_HORIZONTAL_PADDING = (32*2)/5;
+const SCREEN_HORIZONTAL_PADDING = (25*2)/5;
 
 export const DAY_MARGIN_BETWEEN = 8;
 export const DAY_SIZE = (Dimensions.get('screen').width / WEEK_DAYS) - (SCREEN_HORIZONTAL_PADDING + 5)
@@ -25,7 +25,7 @@ export function TradeDay ({amountOfTrades = 0, amountOfWinnerTrades = 0, date, .
   return (
     <TouchableOpacity 
       className={clsx('rounded-lg border-2 m-1', {
-        'bg-yellow-400 border-yellow-500' : winnerPercentage == 100,
+        'bg-green-400 border-green-300' : winnerPercentage == 100,
         'bg-green-500 border-green-400' : winnerPercentage >= 80 && winnerPercentage < 100,
         'bg-green-600 border-green-500' : winnerPercentage >= 60 && winnerPercentage < 80,
         'bg-green-700 border-green-600' : winnerPercentage >= 40 && winnerPercentage < 60,
