@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider         = "prisma-client-js"
+  previewFreatures = ["driverAdapters"]
 }
 
 // generator erd {
@@ -10,8 +11,10 @@ generator client {
 // }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  // provider = "sqlite"
+  // url      = env("API_DATABASE_URL_SQLITE")
+  url      = env("API_DATABASE_URL_POSTGRES")
 }
 
 model Trade {
