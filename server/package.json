@@ -4,7 +4,7 @@
   "description": "",
   "main": "./src/server.ts",
   "scripts": {
-    "build": "esbuild src/server.ts --bundle --platform=node --output public", 
+    "build": "esbuild src/server.ts --bundle --platform=node --outfile=./dist/server.cjs",
     "start": "pm2 start ecosystem.config.js --env production",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/server.ts"
