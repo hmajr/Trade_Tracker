@@ -1,6 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Node 22",
   "_version": "22.0.0",
 
   "compilerOptions": {
@@ -11,6 +10,10 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "moduleResolution": "node16"
-  }
+    "moduleResolution": "node16",
+    "declaration": true,
+    "emitDeclarationOnly":true,
+    "allowImportingTsExtensions":true
+  },
+  "extends": "@tsconfig/node22/tsconfig.json"
 }
